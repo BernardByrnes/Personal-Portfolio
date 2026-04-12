@@ -120,7 +120,7 @@ export default function HeroSection() {
         {/* Name + role anchored below the orbit */}
         <div className={styles.mobileContent}>
           <h1 className={styles.mobileName}>Mutambo Bernard</h1>
-          <p className={styles.mobileSubtitle}>Frontend Developer</p>
+          <p className={styles.mobileSubtitle}>Software Developer</p>
           <p className={styles.mobileTagline}>Engineered for Experience</p>
         </div>
 
@@ -149,7 +149,7 @@ export default function HeroSection() {
         {/* Name / title overlay — fades in when screen text is visible */}
         <div ref={overlayRef} className={styles.overlay} style={{ opacity: 0 }}>
           <h1 className={styles.overlayName}>Mutambo Bernard</h1>
-          <p className={styles.overlayTitle}>Frontend Developer</p>
+          <p className={styles.overlayTitle}>Software Developer</p>
         </div>
 
         {/* Scroll cue */}

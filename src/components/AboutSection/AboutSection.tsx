@@ -97,7 +97,7 @@ export default function AboutSection() {
             </h2>
 
             <p className={styles.lead}>
-              I&apos;m Mutambo Bernard — a frontend engineer who lives at the
+              I&apos;m Mutambo Bernard — a software engineer who lives at the
               intersection of design and engineering. I believe great interfaces
               are invisible: intuitive, responsive, and cinematic.
             </p>
@@ -120,7 +120,7 @@ export default function AboutSection() {
               <div>
                 <p className={styles.currentlyTitle}>Currently</p>
                 <p className={styles.currentlyText}>
-                  Open to full-time &amp; freelance frontend roles
+                  Open to full-time &amp; freelance software roles
                 </p>
               </div>
             </div>

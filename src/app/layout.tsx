@@ -27,12 +27,12 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Mutambo Bernard | Frontend Developer",
+  title: "Mutambo Bernard | Software Developer",
   description: "I build interfaces that feel alive through motion, design, and performance.",
-  keywords: ["Frontend Developer", "React", "Next.js", "Portfolio", "GSAP", "Motion Design"],
+  keywords: ["Software Developer", "React", "Next.js", "Portfolio", "GSAP", "Motion Design"],
   authors: [{ name: "Mutambo Bernard" }],
   openGraph: {
-    title: "Mutambo Bernard | Frontend Developer",
+    title: "Mutambo Bernard | Software Developer",
     description: "I build interfaces that feel alive through motion, design, and performance.",
     type: "website",
   },

@@ -1,6 +1,6 @@
 export const PORTFOLIO = {
   name: "MUTAMBO BERNARD",
-  title: "Frontend Developer",
+  title: "Software Developer",
   tagline: "I build interfaces that feel alive through motion, design, and performance.",
   email: "bernardtambo40@gmail.com",
   github: "https://github.com/mutambo",
