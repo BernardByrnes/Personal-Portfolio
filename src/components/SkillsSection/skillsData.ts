@@ -5,11 +5,11 @@ import {
   SiGreensock,
 } from "react-icons/si";
 import { TbApi } from "react-icons/tb";
-import type { ElementType } from "react";
+import type { ComponentType } from "react";
 
 export type Skill = {
   name:     string;
-  icon:     ElementType;
+  icon:     ComponentType<{ size?: number; color?: string }>;
   color:    string;
   category: "frontend" | "backend" | "tools";
 };
