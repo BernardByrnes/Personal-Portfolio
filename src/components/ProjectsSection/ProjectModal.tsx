@@ -76,7 +76,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
 
   return (
     <div ref={overlayRef} className={styles.overlay} onClick={handleOverlayClick}>
-      <div ref={modalRef} className={styles.modal}>
+      <div ref={modalRef} className={styles.modal} data-lenis-prevent>
 
         {/* Close button */}
         <button className={styles.closeBtn} onClick={handleClose} aria-label="Close">

@@ -34,7 +34,9 @@ src/
   components/
     Preloader/          — full-screen loading screen (first visit only)
     Navigation/         — sticky nav with active section tracking + mobile hamburger drawer
-    HeroSection/        — SVG text-mask video hero with 3-phase scroll story
+    HeroSection/        — scroll-driven 3D laptop scene (React Three Fiber) + SVG text-mask video
+      Laptop.tsx        — procedural laptop model: base, lid, screen texture, keyboard keys (InstancedMesh), spacebar, backlight
+      LaptopScene.tsx   — R3F Canvas, camera arc rig, ambient particles, scene lighting
     AboutSection/       — bio text, stat cards, "currently" box, CV download, gradient drift bg
     ProjectsSection/    — staggered masonry grid, cinematic hover overlay, project modal
     SkillsSection/      — floating animated skill clusters with drift + scroll velocity response
@@ -101,7 +103,19 @@ All animations go through GSAP + ScrollTrigger. Centralized presets in `lib/anim
 ## Component Notes
 
 ### HeroSection _(most complex)_
-Section height: `300vh`. Inner container is `position: sticky; height: 100vh` — the sticky approach avoids GSAP pin-spacer conflicts.
+Section height: `300vh`. Inner container is `position: sticky; height: 100vh`.
+
+**Two layers run simultaneously:**
+1. **3D laptop scene** (React Three Fiber, full-screen Canvas behind everything)
+2. **SVG text-mask video** (overlaid on top, fades out as scroll progresses)
+
+**3D Laptop scene (`LaptopScene.tsx` + `Laptop.tsx`):**
+- Canvas starts with camera behind the closed lid (`[0, 1.2, -5.5]`), sweeps over a quadratic Bézier arc to a front 3/4 position (`[2.8, 2.0, 8.0]`) as the user scrolls
+- Scroll progress drives: lid opening (`-0.02 → -1.92 rad` over scroll `0.2–0.42`), screen glow (`0.4–0.56`), keyboard backlight (`0.42–0.58`), screen texture fade-in (`0.56–0.74`)
+- Laptop model is fully procedural (no GLTF): base slab, hinge cylinder, lid shell, bezel, screen plane with Canvas texture, 65 keyboard keys via `InstancedMesh` + separate spacebar mesh
+- Subtle mouse parallax layered on the camera arc (±0.18 X, ±0.12 Y)
+- 160 ambient particles orbiting in a sphere (`r: 6–13`) with vertex colors, slow Y-axis rotation
+- Lighting: boosted ambient (0.90), strong main key ([3,6,3] @ 2.4), blue rim ([-4,3,-4] @ 0.85), back-of-lid fill ([0,2,-6] @ 1.8), top-back fill ([0,5,-4] @ 1.1 blue-tinted) — the last two ensure the closed lid reads clearly at scroll=0
 
 **The text-mask video effect:**
 - An inline SVG defines a `<clipPath id="heroNameClip">` with two `<text>` elements ("MUTAMBO" / "BERNARD") using `fontFamily: Syne`, `fontSize: 13vw`, centered via `x="50%"` and `y` percentages
@@ -113,7 +127,7 @@ Section height: `300vh`. Inner container is `position: sticky; height: 100vh` �
 - Phase 2 (20–55%): tagline fades in (`opacity: 0 → 1`), sticky container scales up subtly (1 → 1.06)
 - Phase 3 (55–100%): clipped video fades out, full background video fades in, dark overlay fades to transparent
 
-A separate ScrollTrigger `onUpdate` scrubs both videos' `currentTime` in sync with scroll progress. The old `lenis.scroll` manual event listener approach has been removed entirely.
+A separate ScrollTrigger `onUpdate` scrubs both videos' `currentTime` in sync with scroll progress.
 
 **Overlays:** dark base (`#0a0a0a`, z-index 1), grain (SVG fractalNoise, z-index 10, mix-blend-mode overlay), vignette (radial gradient, z-index 9).
 

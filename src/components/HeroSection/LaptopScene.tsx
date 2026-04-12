@@ -119,18 +119,20 @@ function Scene({ progress, mouse }: SceneProps) {
       <CameraRig progress={progress} mouse={mouse} />
 
       {/* Lighting */}
-      <ambientLight intensity={0.65} />
+      <ambientLight intensity={0.90} />
       <directionalLight
         position={[3, 6, 3]}
-        intensity={1.8}
+        intensity={2.4}
         castShadow
         shadow-mapSize={[1024, 1024]}
         shadow-bias={-0.001}
       />
       {/* Rim light — edges of aluminium */}
-      <directionalLight position={[-4, 3, -4]} intensity={0.55} color="#8899ff" />
-      {/* Fill from behind for the "back of lid" shot */}
-      <directionalLight position={[0, 2, -6]} intensity={0.75} />
+      <directionalLight position={[-4, 3, -4]} intensity={0.85} color="#8899ff" />
+      {/* Fill from behind — primary light for the closed-lid opening shot */}
+      <directionalLight position={[0, 2, -6]} intensity={1.8} />
+      {/* Extra top-back fill so the lid reads clearly from camera start position */}
+      <directionalLight position={[0, 5, -4]} intensity={1.1} color="#ccd6ff" />
 
       <Laptop progress={progress} />
       <Particles />

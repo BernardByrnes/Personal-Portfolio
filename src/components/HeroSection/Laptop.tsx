@@ -4,6 +4,124 @@ import { useRef, useEffect, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
+// ── Keyboard layout ───────────────────────────────────────────────────────────
+//
+//  All rows share the same total width, built on a 15-step column grid:
+//    15 × K_W  +  14 × GAP  =  2.446  (≈ recess width of 2.44)
+//
+//  step(n) key: physical width  =  n × STEP − GAP
+//  step(n) key: x-centre        =  X0 + (startStep + (n−1)/2) × STEP
+//
+const STEP   = 0.164;                           // K_W + GAP
+const K_W    = 0.150;                           // standard key width
+const K_D    = 0.138;                           // standard key depth
+const K_H    = 0.018;                           // key height above surface
+const GAP    = 0.014;                           // gap between keys
+const KB_Y   = 0.062;                           // sits just above the recess
+const KB_TOT = 15 * K_W + 14 * GAP;            // 2.446
+const X0     = -(KB_TOT / 2) + K_W / 2;        // −1.148  (step-0 centre)
+
+// Physical width of a key spanning n column-steps
+function kw(n: number)            { return n * STEP - GAP; }
+
+// X-centre of a key that starts at `step` and spans `w` steps
+function kx(step: number, w = 1) { return X0 + (step + (w - 1) / 2) * STEP; }
+
+// ── Row Z centres (screen-side → touchpad-side) ───────────────────────────────
+const FN_D = 0.100;                             // fn keys are shallower
+const Z0   = -0.52;                             // fn row
+const Z1   = Z0 + FN_D / 2 + 0.036 + K_D / 2; // number row  (≈ −0.365)
+const Z2   = Z1 + K_D + GAP;                   // QWERTY      (≈ −0.213)
+const Z3   = Z2 + K_D + GAP;                   // ASDF        (≈ −0.061)
+const Z4   = Z3 + K_D + GAP;                   // ZXCV        (≈  0.091)
+const Z5   = Z4 + K_D + GAP;                   // bottom row  (≈  0.243)
+
+// ── Standard-width keys — 46 total, rendered as one InstancedMesh ─────────────
+const STD_KEYS = [
+  // Row 1 — ` 1 2 3 4 5 6 7 8 9 0 - =  (13 keys, steps 0–12)
+  ...[...Array(13)].map((_, i) => [X0 + i * STEP, Z1]),
+  // Row 2 — Q W E R T Y U I O P [ ]    (12 keys, steps 1.5–12.5)
+  ...[...Array(12)].map((_, i) => [kx(1.5 + i), Z2]),
+  // Row 3 — A S D F G H J K L ; '      (11 keys, steps 1.75–11.75)
+  ...[...Array(11)].map((_, i) => [kx(1.75 + i), Z3]),
+  // Row 4 — Z X C V B N M , . /        (10 keys, steps 2.25–11.25)
+  ...[...Array(10)].map((_, i) => [kx(2.25 + i), Z4]),
+];
+
+// ── Fn-row keys — 14 uniform keys that together span the full keyboard width ──
+const FN_W    = (KB_TOT - 13 * GAP) / 14;      // ≈ 0.162
+const FN_STEP = FN_W + GAP;                     // ≈ 0.176
+const FN_X0   = -(KB_TOT / 2) + FN_W / 2;      // left-most fn-key centre
+const FN_KEYS = Array.from({ length: 14 }, (_, i) => FN_X0 + i * FN_STEP);
+
+// ── Wide / special keys — individual meshes ───────────────────────────────────
+const WIDE_KEYS = [
+  // Row 1
+  { x: kx(13, 2),       z: Z1, w: kw(2)    },  // Backspace   (2 steps)
+  // Row 2
+  { x: kx(0, 1.5),      z: Z2, w: kw(1.5)  },  // Tab         (1.5)
+  { x: kx(13.5, 1.5),   z: Z2, w: kw(1.5)  },  // Backslash   (1.5)
+  // Row 3
+  { x: kx(0, 1.75),     z: Z3, w: kw(1.75) },  // CapsLock    (1.75)
+  { x: kx(12.75, 2.25), z: Z3, w: kw(2.25) },  // Enter       (2.25)
+  // Row 4
+  { x: kx(0, 2.25),     z: Z4, w: kw(2.25) },  // Left Shift  (2.25)
+  { x: kx(12.25, 2.75), z: Z4, w: kw(2.75) },  // Right Shift (2.75)
+  // Row 5 — Ctrl · Alt · Space · Alt · Ctrl  (sums to 15 steps)
+  { x: kx(0, 1.5),      z: Z5, w: kw(1.5)  },  // Ctrl L
+  { x: kx(1.5, 1.25),   z: Z5, w: kw(1.25) },  // Alt L
+  { x: 0,               z: Z5, w: kw(9.5)   },  // Space (centred by symmetry)
+  { x: kx(12.25, 1.25), z: Z5, w: kw(1.25) },  // Alt R
+  { x: kx(13.5, 1.5),   z: Z5, w: kw(1.5)  },  // Ctrl R
+];
+
+function KeyboardKeys() {
+  const stdRef = useRef<THREE.InstancedMesh>(null!);
+  const fnRef  = useRef<THREE.InstancedMesh>(null!);
+
+  useEffect(() => {
+    const dummy = new THREE.Object3D();
+
+    STD_KEYS.forEach(([x, z], i) => {
+      dummy.position.set(x, KB_Y, z);
+      dummy.updateMatrix();
+      stdRef.current.setMatrixAt(i, dummy.matrix);
+    });
+    stdRef.current.instanceMatrix.needsUpdate = true;
+
+    FN_KEYS.forEach((x, i) => {
+      dummy.position.set(x, KB_Y, Z0);
+      dummy.updateMatrix();
+      fnRef.current.setMatrixAt(i, dummy.matrix);
+    });
+    fnRef.current.instanceMatrix.needsUpdate = true;
+  }, []);
+
+  return (
+    <>
+      {/* Standard keys */}
+      <instancedMesh ref={stdRef} args={[undefined, undefined, STD_KEYS.length]}>
+        <boxGeometry args={[K_W, K_H, K_D]} />
+        <meshStandardMaterial color="#212124" roughness={0.80} metalness={0.20} />
+      </instancedMesh>
+
+      {/* Fn row — slightly shallower, spans the full width */}
+      <instancedMesh ref={fnRef} args={[undefined, undefined, FN_KEYS.length]}>
+        <boxGeometry args={[FN_W, K_H, FN_D]} />
+        <meshStandardMaterial color="#212124" roughness={0.80} metalness={0.20} />
+      </instancedMesh>
+
+      {/* Wide / special keys */}
+      {WIDE_KEYS.map(({ x, z, w }, i) => (
+        <mesh key={i} position={[x, KB_Y, z]}>
+          <boxGeometry args={[w, K_H, K_D]} />
+          <meshStandardMaterial color="#212124" roughness={0.80} metalness={0.20} />
+        </mesh>
+      ))}
+    </>
+  );
+}
+
 type Props = {
   progress: React.MutableRefObject<number>;
 };
@@ -127,6 +245,9 @@ export function Laptop({ progress }: Props) {
         <boxGeometry args={[2.44, 0.004, 1.44]} />
         <meshStandardMaterial color="#111113" roughness={0.95} metalness={0.3} />
       </mesh>
+
+      {/* Keyboard keys */}
+      <KeyboardKeys />
 
       {/* Touchpad */}
       <mesh position={[0, 0.052, 0.62]}>

@@ -9,7 +9,6 @@
   justify-content: center;
   z-index: 1000;
   padding: 1rem;
-  overflow-y: auto;
 }
 
 /* ─── Modal container ─────────────────────────────────────────── */
@@ -23,6 +22,9 @@
   max-height: 92vh;
   overflow-y: auto;
   overflow-x: hidden;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
   /* Thin scrollbar */
   scrollbar-width: thin;
   scrollbar-color: rgba(255,255,255,0.1) transparent;
