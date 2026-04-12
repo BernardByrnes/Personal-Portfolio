@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, Suspense } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
 import { EffectComposer, Bloom, ChromaticAberration, Vignette } from "@react-three/postprocessing";
@@ -136,7 +136,9 @@ function Scene({ progress, mouse }: SceneProps) {
       {/* Extra top-back fill so the lid reads clearly from camera start position */}
       <directionalLight position={[0, 5, -4]} intensity={1.1} color="#ccd6ff" />
 
-      <Environment preset="city" background={false} />
+      <Suspense fallback={null}>
+        <Environment preset="city" background={false} />
+      </Suspense>
 
       <Laptop progress={progress} />
       <Particles />
