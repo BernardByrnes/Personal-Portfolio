@@ -4,6 +4,79 @@ import { useRef, useEffect, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
+// ── Animated screen — typewriter code effect ──────────────────────────────────
+const CODE_LINES = [
+  "const portfolio = {",
+  "  name: 'Mutambo Bernard',",
+  "  role: 'Software Developer',",
+  "  stack: ['Next.js', 'R3F', 'GSAP'],",
+  "  shipped: 20,",
+  "  events: '10M+ / day',",
+  "  open: true,",
+  "};",
+];
+const LINE_COLORS = [
+  "#7dcfff",   // keyword
+  "#9ece6a",   // string
+  "#9ece6a",   // string
+  "#ff9e64",   // array
+  "#bb9af7",   // number
+  "#9ece6a",   // string
+  "#bb9af7",   // bool
+  "#7dcfff",   // punctuation
+];
+const CHARS_PER_SEC = 22;
+const TOTAL_CHARS   = CODE_LINES.reduce((a, l) => a + l.length, 0);
+
+function drawScreen(
+  ctx: CanvasRenderingContext2D,
+  totalChars: number,
+  cursorOn: boolean,
+) {
+  const W = 1024, H = 640;
+  ctx.clearRect(0, 0, W, H);
+
+  ctx.fillStyle = "#04040e";
+  ctx.fillRect(0, 0, W, H);
+
+  const grad = ctx.createRadialGradient(512, 320, 0, 512, 320, 400);
+  grad.addColorStop(0, "rgba(40, 70, 200, 0.15)");
+  grad.addColorStop(1, "rgba(0, 0, 0, 0)");
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.font = "500 24px 'Consolas', 'Courier New', monospace";
+  ctx.textBaseline = "top";
+
+  const LEFT = 90, TOP = 96, LINE_H = 60;
+  let remaining = totalChars;
+  let cx = LEFT, cy = TOP;
+
+  for (let i = 0; i < CODE_LINES.length; i++) {
+    if (remaining <= 0) break;
+    const line  = CODE_LINES[i];
+    const drawn = Math.min(remaining, line.length);
+    const text  = line.slice(0, drawn);
+
+    ctx.fillStyle = LINE_COLORS[i];
+    ctx.fillText(text, LEFT, TOP + i * LINE_H);
+
+    remaining -= drawn;
+    if (remaining > 0) {
+      cx = LEFT;
+      cy = TOP + (i + 1) * LINE_H;
+    } else {
+      cx = LEFT + ctx.measureText(text).width;
+      cy = TOP + i * LINE_H;
+    }
+  }
+
+  if (cursorOn && totalChars < TOTAL_CHARS) {
+    ctx.fillStyle = "rgba(130, 170, 255, 0.85)";
+    ctx.fillRect(cx + 1, cy + 3, 2, 26);
+  }
+}
+
 // ── Keyboard layout ───────────────────────────────────────────────────────────
 //
 //  All rows share the same total width, built on a 15-step column grid:
@@ -143,45 +216,27 @@ export function Laptop({ progress }: Props) {
   const textMatRef     = useRef<THREE.MeshBasicMaterial>(null!);
 
   const [screenTexture, setScreenTexture] = useState<THREE.CanvasTexture | null>(null);
+  const canvasCtxRef    = useRef<CanvasRenderingContext2D | null>(null);
+  const canvasTexRef    = useRef<THREE.CanvasTexture | null>(null);
+  const screenOnTimeRef = useRef(-1);
+  const lastDrawRef     = useRef({ chars: -1, cursor: false });
 
   useEffect(() => {
     const canvas = document.createElement("canvas");
     canvas.width  = 1024;
     canvas.height = 640;
     const ctx = canvas.getContext("2d")!;
+    canvasCtxRef.current = ctx;
 
-    // Screen background
-    ctx.fillStyle = "#04040e";
-    ctx.fillRect(0, 0, 1024, 640);
-
-    // Radial glow
-    const grad = ctx.createRadialGradient(512, 320, 0, 512, 320, 480);
-    grad.addColorStop(0, "rgba(60, 90, 220, 0.18)");
-    grad.addColorStop(1, "rgba(0, 0, 0, 0)");
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, 1024, 640);
-
-    // Main text
-    ctx.fillStyle = "rgba(255, 255, 255, 0.93)";
-    ctx.font = "600 46px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText("Engineered for Experience", 512, 308);
-
-    // Accent underline
-    ctx.strokeStyle = "rgba(110, 145, 255, 0.5)";
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.moveTo(195, 362);
-    ctx.lineTo(830, 362);
-    ctx.stroke();
+    drawScreen(ctx, 0, false);  // dark initial state
 
     const tex = new THREE.CanvasTexture(canvas);
+    canvasTexRef.current = tex;
     setScreenTexture(tex);
     return () => tex.dispose();
   }, []);
 
-  useFrame(() => {
+  useFrame(({ clock }) => {
     const p = progress.current;
 
     // Whole laptop Y rotation (0 → 0.35 rad) — builds 3/4 view over full scroll
@@ -223,6 +278,26 @@ export function Laptop({ progress }: Props) {
       textMatRef.current.opacity = THREE.MathUtils.lerp(
         0, 1, invLerp(0.56, 0.74, p)
       );
+    }
+
+    // Typewriter — starts when screen becomes visible (p > 0.38)
+    const ctx = canvasCtxRef.current;
+    const tex = canvasTexRef.current;
+    if (ctx && tex) {
+      if (p > 0.38 && screenOnTimeRef.current < 0) {
+        screenOnTimeRef.current = clock.elapsedTime;
+      }
+      if (screenOnTimeRef.current >= 0) {
+        const elapsed   = clock.elapsedTime - screenOnTimeRef.current;
+        const charCount = Math.min(TOTAL_CHARS, Math.floor(elapsed * CHARS_PER_SEC));
+        const cursorOn  = Math.floor(clock.elapsedTime * 1.8) % 2 === 0;
+
+        if (charCount !== lastDrawRef.current.chars || cursorOn !== lastDrawRef.current.cursor) {
+          drawScreen(ctx, charCount, cursorOn);
+          tex.needsUpdate = true;
+          lastDrawRef.current = { chars: charCount, cursor: cursorOn };
+        }
+      }
     }
   });
 

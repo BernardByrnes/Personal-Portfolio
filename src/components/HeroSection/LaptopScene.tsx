@@ -2,6 +2,8 @@
 
 import { useRef, useMemo } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Environment } from "@react-three/drei";
+import { EffectComposer, Bloom, ChromaticAberration, Vignette } from "@react-three/postprocessing";
 import * as THREE from "three";
 import { Laptop } from "./Laptop";
 
@@ -134,10 +136,18 @@ function Scene({ progress, mouse }: SceneProps) {
       {/* Extra top-back fill so the lid reads clearly from camera start position */}
       <directionalLight position={[0, 5, -4]} intensity={1.1} color="#ccd6ff" />
 
+      <Environment preset="city" background={false} />
+
       <Laptop progress={progress} />
       <Particles />
 
       <fog attach="fog" args={["#0c0c12", 14, 32]} />
+
+      <EffectComposer>
+        <Bloom luminanceThreshold={0.55} luminanceSmoothing={0.35} intensity={0.55} mipmapBlur />
+        <ChromaticAberration offset={new THREE.Vector2(0.0004, 0.0004)} />
+        <Vignette offset={0.4} darkness={0.55} />
+      </EffectComposer>
     </>
   );
 }
