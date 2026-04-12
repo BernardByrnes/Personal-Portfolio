@@ -102,11 +102,6 @@ export default function AboutSection() {
               are invisible: intuitive, responsive, and cinematic.
             </p>
 
-            <p>
-              Motion isn&apos;t decoration — it&apos;s communication. I use
-              GSAP, scroll-driven storytelling, and thoughtful micro-interactions
-              to build experiences that feel effortlessly alive across every device.
-            </p>
           </div>
 
           {/* Sidebar */}
