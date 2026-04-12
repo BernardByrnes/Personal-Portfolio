@@ -1,0 +1,29 @@
+.cursor,
+.follower {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: difference;
+}
+
+.cursor {
+  width: 10px;
+  height: 10px;
+  background: white;
+  transform: translate(-50%, -50%);
+}
+
+.follower {
+  width: 40px;
+  height: 40px;
+  border: 1px solid white;
+  transform: translate(-50%, -50%);
+}
+
+@media (max-width: 768px) {
+  .cursor,
+  .follower {
+    display: none;
+  }
+}

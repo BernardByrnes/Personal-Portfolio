@@ -1,0 +1,188 @@
+/* ─── Desktop 3D Hero ─────────────────────────────────────── */
+.heroSection {
+  position: relative;
+  height: 400vh;           /* scroll room for the full animation */
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background: #0a0a0a;
+}
+
+/* Three.js canvas wrapper */
+.canvasWrap {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* Shown while dynamic import is loading */
+.canvasPlaceholder {
+  width: 100%;
+  height: 100%;
+  background: #0a0a0a;
+}
+
+/* Before JS hydrates */
+.placeholder {
+  height: 100vh;
+  background: #0a0a0a;
+}
+
+/* ─── HTML overlay — name + title ─────────────────────────── */
+.overlay {
+  position: absolute;
+  bottom: 17%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 10;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.overlayName {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  margin: 0 0 0.55rem;
+}
+
+.overlayTitle {
+  font-family: var(--font-mono);
+  font-size: clamp(0.65rem, 1.3vw, 0.85rem);
+  color: rgba(255, 255, 255, 0.45);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+/* ─── Scroll cue ───────────────────────────────────────────── */
+.scrollCue {
+  position: absolute;
+  bottom: 2.4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  z-index: 10;
+  color: rgba(255, 255, 255, 0.32);
+  pointer-events: none;
+}
+
+.scrollCue span {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.scrollArrow {
+  animation: arrowBounce 2.4s ease-in-out infinite;
+}
+
+@keyframes arrowBounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(7px); }
+}
+
+/* ─── Mobile Hero ──────────────────────────────────────────── */
+.mobileHero {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #0a0a0a;
+}
+
+/* Orbit canvas — upper ~55% of the screen */
+.mobileOrbit {
+  width: 100%;
+  height: 58vh;
+  flex-shrink: 0;
+}
+
+.orbitPlaceholder {
+  width: 100%;
+  height: 58vh;
+}
+
+.mobileGrain {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.04;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+.mobileContent {
+  text-align: center;
+  padding: 0 1.5rem;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: -1rem; /* pull up slightly — orbit has natural bottom padding */
+}
+
+.mobileName {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 8vw, 2.8rem);
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.03em;
+  line-height: 1.1;
+}
+
+.mobileSubtitle {
+  font-family: var(--font-mono);
+  font-size: clamp(0.65rem, 2.5vw, 0.8rem);
+  color: rgba(255, 255, 255, 0.38);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.mobileTagline {
+  font-family: var(--font-body);
+  font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+  color: rgba(255, 255, 255, 0.52);
+  letter-spacing: 0.03em;
+  margin-top: 0.3rem;
+}
+
+.mobileCue {
+  position: absolute;
+  bottom: 2.4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  color: rgba(255, 255, 255, 0.28);
+  z-index: 2;
+}
+
+.mobileCue span {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.mobileCue svg {
+  animation: arrowBounce 2.4s ease-in-out infinite;
+}
