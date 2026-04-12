@@ -95,7 +95,6 @@ export const MOTION = {
 
   // "Mask reveal" — clip-path wipe from bottom (for text/image reveals)
   maskReveal: {
-    clipPath: "inset(100% 0 0 0)",
     duration: 0.9,
     ease: EASING.snappy,
     stagger: 0.1,
