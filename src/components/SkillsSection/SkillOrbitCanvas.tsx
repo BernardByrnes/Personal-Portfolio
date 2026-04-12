@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, useState, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import * as THREE from "three";
@@ -91,14 +91,31 @@ function Orbit({ onHover }: OrbitProps) {
 }
 
 export function SkillOrbitCanvas({ onHover }: OrbitProps) {
+  const wrapRef  = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(false);
+
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => setActive(entry.isIntersecting),
+      { threshold: 0.01 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
   return (
-    <Canvas
-      dpr={[1, 2]}
-      gl={{ antialias: true, alpha: true }}
-      camera={{ position: [0, 0.4, 7.5], fov: 50 }}
-    >
-      <ambientLight intensity={1} />
-      <Orbit onHover={onHover} />
-    </Canvas>
+    <div ref={wrapRef} style={{ width: "100%", height: "100%" }}>
+      <Canvas
+        frameloop={active ? "always" : "demand"}
+        dpr={[1, 1.5]}
+        gl={{ antialias: true, alpha: true }}
+        camera={{ position: [0, 0.4, 7.5], fov: 50 }}
+      >
+        <ambientLight intensity={1} />
+        <Orbit onHover={onHover} />
+      </Canvas>
+    </div>
   );
 }

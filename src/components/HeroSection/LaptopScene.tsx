@@ -146,7 +146,7 @@ function Scene({ progress, mouse }: SceneProps) {
       <fog attach="fog" args={["#0c0c12", 14, 32]} />
 
       <EffectComposer>
-        <Bloom luminanceThreshold={0.55} luminanceSmoothing={0.35} intensity={0.55} mipmapBlur />
+        <Bloom luminanceThreshold={0.55} luminanceSmoothing={0.35} intensity={0.45} />
         <ChromaticAberration offset={new THREE.Vector2(0.0004, 0.0004)} />
         <Vignette offset={0.4} darkness={0.55} />
       </EffectComposer>
@@ -160,7 +160,7 @@ export function LaptopScene({ progress, mouse }: SceneProps) {
   return (
     <Canvas
       shadows
-      dpr={[1, 2]}
+      dpr={[1, 1.5]}
       gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
       camera={{ position: [0, 1.2, -5.5], fov: 42, near: 0.1, far: 60 }}
       style={{ background: "#0e0e14" }}
