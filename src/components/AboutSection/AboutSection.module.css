@@ -117,6 +117,23 @@
   line-height: 1.85;
 }
 
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: rgba(102, 126, 234, 0.9);
+  background: rgba(102, 126, 234, 0.08);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  border-radius: 6px;
+  padding: 0.3rem 0.65rem;
+  letter-spacing: 0.04em;
+}
+
 /* ─── Sidebar ─────────────────────────────────────────────────── */
 .sidebar {
   display: flex;
@@ -200,10 +217,39 @@
   line-height: 1.5;
 }
 
+.linkRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
 .cvLink {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  font-family: var(--font-body);
+  font-size: 0.825rem;
+  font-weight: 500;
+  color: #ffffff;
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  background: rgba(102, 126, 234, 0.15);
+  border: 1px solid rgba(102, 126, 234, 0.35);
+  border-radius: 8px;
+  padding: 0.6rem 1.1rem;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.cvLink:hover {
+  background: rgba(102, 126, 234, 0.25);
+  border-color: rgba(102, 126, 234, 0.6);
+}
+
+.githubLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
   font-family: var(--font-body);
   font-size: 0.825rem;
   font-weight: 500;
@@ -213,11 +259,10 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   padding: 0.6rem 1.1rem;
-  align-self: flex-start;
   transition: color 0.3s ease, border-color 0.3s ease;
 }
 
-.cvLink:hover {
+.githubLink:hover {
   color: #ffffff;
   border-color: rgba(255, 255, 255, 0.25);
 }
