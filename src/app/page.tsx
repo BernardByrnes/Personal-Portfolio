@@ -21,6 +21,10 @@ export default function Home() {
   const [loadingState, setLoadingState] = useState<boolean | null>(null);
 
   useEffect(() => {
+    if ("scrollRestoration" in history) {
+      history.scrollRestoration = "manual";
+    }
+    window.scrollTo(0, 0);
     const visited = localStorage.getItem("hasVisited");
     setLoadingState(visited ? false : true);
   }, []);
