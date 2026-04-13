@@ -36,19 +36,19 @@ function drawScreen(
   const W = 1024, H = 640;
   ctx.clearRect(0, 0, W, H);
 
-  ctx.fillStyle = "#04040e";
+  ctx.fillStyle = "#080818";
   ctx.fillRect(0, 0, W, H);
 
-  const grad = ctx.createRadialGradient(512, 320, 0, 512, 320, 400);
-  grad.addColorStop(0, "rgba(40, 70, 200, 0.15)");
+  const grad = ctx.createRadialGradient(512, 320, 0, 512, 320, 480);
+  grad.addColorStop(0, "rgba(40, 70, 200, 0.22)");
   grad.addColorStop(1, "rgba(0, 0, 0, 0)");
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, W, H);
 
-  ctx.font = "500 24px 'Consolas', 'Courier New', monospace";
+  ctx.font = "500 30px 'Consolas', 'Courier New', monospace";
   ctx.textBaseline = "top";
 
-  const LEFT = 90, TOP = 96, LINE_H = 60;
+  const LEFT = 80, TOP = 80, LINE_H = 64;
   let remaining = totalChars;
   let cx = LEFT, cy = TOP;
 
@@ -255,7 +255,7 @@ export function Laptop({ progress }: Props) {
     // Screen glow turns on: scroll 0.4 → 0.56
     if (screenMatRef.current) {
       screenMatRef.current.emissiveIntensity = THREE.MathUtils.lerp(
-        0, 0.6, invLerp(0.4, 0.56, p)
+        0, 0.85, invLerp(0.4, 0.56, p)
       );
     }
 
@@ -303,14 +303,8 @@ export function Laptop({ progress }: Props) {
 
   return (
     <group ref={groupRef}>
-      {/* Soft shadow beneath laptop */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.055, 0]} receiveShadow>
-        <planeGeometry args={[10, 10]} />
-        <shadowMaterial opacity={0.4} />
-      </mesh>
-
       {/* ── Base / keyboard deck ─────────────────────────────── */}
-      <mesh castShadow receiveShadow>
+      <mesh>
         <boxGeometry args={[3, 0.1, 2]} />
         <meshStandardMaterial color="#1c1c1e" roughness={0.74} metalness={0.88} />
       </mesh>
@@ -351,7 +345,7 @@ export function Laptop({ progress }: Props) {
       <group ref={pivotRef} position={[0, 0.05, -1]}>
 
         {/* Lid shell */}
-        <mesh castShadow position={[0, 0.04, 1]}>
+        <mesh position={[0, 0.04, 1]}>
           <boxGeometry args={[3, 0.08, 2]} />
           <meshStandardMaterial color="#1c1c1e" roughness={0.72} metalness={0.88} />
         </mesh>

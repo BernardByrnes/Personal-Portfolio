@@ -14,15 +14,19 @@ const LaptopScene = dynamic(
   { ssr: false, loading: () => <div className={styles.canvasPlaceholder} /> }
 );
 
-const SkillOrbitCanvas = dynamic(
+// Skill orbit — mobile hero only
+const MobileOrbit = dynamic(
   () => import("../SkillsSection/SkillOrbitCanvas").then((m) => m.SkillOrbitCanvas),
-  { ssr: false, loading: () => <div className={styles.orbitPlaceholder} /> }
+  { ssr: false, loading: () => <div className={styles.mobileOrbitPlaceholder} /> }
 );
 
 export default function HeroSection() {
-  const sectionRef     = useRef<HTMLElement>(null);
-  const overlayRef     = useRef<HTMLDivElement>(null);
-  const scrollCueRef   = useRef<HTMLDivElement>(null);
+  const sectionRef   = useRef<HTMLElement>(null);
+  const overlayRef   = useRef<HTMLDivElement>(null);
+  const scrollCueRef = useRef<HTMLDivElement>(null);
+
+  // Mobile overlay ref (name + role)
+  const mobileOverlayRef = useRef<HTMLDivElement>(null);
 
   // Mutable state shared with R3F (no re-renders needed)
   const progress = useRef(0);
@@ -49,6 +53,19 @@ export default function HeroSection() {
     window.addEventListener("mousemove", onMove, { passive: true });
     return () => window.removeEventListener("mousemove", onMove);
   }, []);
+
+  // Mobile entrance animation — fade up the name overlay
+  useEffect(() => {
+    if (!mounted || !isMobile) return;
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        mobileOverlayRef.current,
+        { opacity: 0, y: 24 },
+        { opacity: 1, y: 0, duration: 1.0, ease: "power3.out", delay: 0.5 }
+      );
+    });
+    return () => ctx.revert();
+  }, [mounted, isMobile]);
 
   // GSAP scroll driver (desktop only)
   useEffect(() => {
@@ -106,24 +123,30 @@ export default function HeroSection() {
     return <section id="hero" className={styles.placeholder} aria-hidden="true" />;
   }
 
-  // ── Mobile — orbit sphere hero ──────────────────────────────────
+  // ── Mobile — interactive orbit hero ─────────────────────────────
   if (isMobile) {
     return (
       <section id="hero" className={styles.mobileHero}>
+        {/* Animated CSS gradient background behind the transparent canvas */}
+        <div className={styles.mobileBg} aria-hidden="true">
+          <div className={styles.mobileBgBlob1} />
+          <div className={styles.mobileBgBlob2} />
+        </div>
         <div className={styles.mobileGrain} aria-hidden="true" />
 
-        {/* Skills orbit — fills top portion of screen */}
-        <div className={styles.mobileOrbit} aria-hidden="true">
-          <SkillOrbitCanvas onHover={() => {}} />
+        {/* Interactive orbit fills the viewport */}
+        <div className={styles.mobileOrbitWrap}>
+          <MobileOrbit />
         </div>
 
-        {/* Name + role anchored below the orbit */}
-        <div className={styles.mobileContent}>
-          <h1 className={styles.mobileName}>Mutambo Bernard</h1>
-          <p className={styles.mobileSubtitle}>Software Developer</p>
-          <p className={styles.mobileTagline}>Engineered for Experience</p>
+        {/* Name + title overlay — fades in on mount */}
+        <div ref={mobileOverlayRef} className={styles.mobileNameOverlay} style={{ opacity: 0 }}>
+          <p className={styles.mobileOverlayRole}>Software Developer</p>
+          <h1 className={styles.mobileOverlayName}>Mutambo Bernard</h1>
+          <p className={styles.mobileDragHint}>drag to explore</p>
         </div>
 
+        {/* Scroll cue */}
         <div className={styles.mobileCue}>
           <span>Scroll</span>
           <svg width="16" height="22" viewBox="0 0 16 22" fill="none" aria-hidden="true">

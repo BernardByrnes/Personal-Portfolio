@@ -95,30 +95,57 @@
   50%       { transform: translateY(7px); }
 }
 
-/* ─── Mobile Hero ──────────────────────────────────────────── */
+/* ─── Mobile Hero — interactive orbit ─────────────────────── */
 .mobileHero {
   position: relative;
   height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   overflow: hidden;
-  background: #0a0a0a;
+  background: #040408;
 }
 
-/* Orbit canvas — upper ~55% of the screen */
-.mobileOrbit {
-  width: 100%;
-  height: 58vh;
-  flex-shrink: 0;
+/* ── CSS animated gradient blobs — behind the canvas ─────── */
+.mobileBg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
 }
 
-.orbitPlaceholder {
-  width: 100%;
-  height: 58vh;
+.mobileBgBlob1 {
+  position: absolute;
+  width: 85%;
+  height: 85%;
+  bottom: -25%;
+  left: -20%;
+  background: radial-gradient(circle, rgba(102, 126, 234, 0.22) 0%, transparent 68%);
+  filter: blur(55px);
+  animation: blobDrift1 14s ease-in-out infinite alternate;
+  will-change: transform;
 }
 
+.mobileBgBlob2 {
+  position: absolute;
+  width: 78%;
+  height: 78%;
+  top: -22%;
+  right: -18%;
+  background: radial-gradient(circle, rgba(118, 75, 162, 0.17) 0%, transparent 68%);
+  filter: blur(60px);
+  animation: blobDrift2 19s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes blobDrift1 {
+  0%   { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(18%, -22%) scale(1.18); }
+}
+
+@keyframes blobDrift2 {
+  0%   { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-14%, 20%) scale(1.13); }
+}
+
+/* ── Grain overlay ────────────────────────────────────────── */
 .mobileGrain {
   position: absolute;
   inset: 0;
@@ -126,43 +153,69 @@
   opacity: 0.04;
   pointer-events: none;
   mix-blend-mode: overlay;
-}
-
-.mobileContent {
-  text-align: center;
-  padding: 0 1.5rem;
   z-index: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-top: -1rem; /* pull up slightly — orbit has natural bottom padding */
 }
 
-.mobileName {
-  font-family: var(--font-display);
-  font-size: clamp(1.8rem, 8vw, 2.8rem);
-  font-weight: 700;
-  color: #ffffff;
-  letter-spacing: 0.03em;
-  line-height: 1.1;
+/* ── Orbit canvas — centred, slightly smaller than full screen */
+.mobileOrbitWrap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -58%);
+  width: 88vw;
+  height: 88vw;
+  max-width: 420px;
+  max-height: 420px;
+  z-index: 2;
 }
 
-.mobileSubtitle {
+.mobileOrbitPlaceholder {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+
+/* ── Name + role overlay — bottom third of screen ─────────── */
+.mobileNameOverlay {
+  position: absolute;
+  bottom: 18%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 5;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.mobileOverlayRole {
   font-family: var(--font-mono);
-  font-size: clamp(0.65rem, 2.5vw, 0.8rem);
+  font-size: 0.62rem;
   color: rgba(255, 255, 255, 0.38);
   letter-spacing: 0.28em;
   text-transform: uppercase;
+  margin: 0 0 0.5rem;
 }
 
-.mobileTagline {
-  font-family: var(--font-body);
-  font-size: clamp(0.9rem, 3.5vw, 1.1rem);
-  color: rgba(255, 255, 255, 0.52);
-  letter-spacing: 0.03em;
-  margin-top: 0.3rem;
+.mobileOverlayName {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 6.5vw, 2.4rem);
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  margin: 0 0 0.6rem;
 }
 
+.mobileDragHint {
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  color: rgba(255, 255, 255, 0.22);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+/* ── Scroll cue ───────────────────────────────────────────── */
 .mobileCue {
   position: absolute;
   bottom: 2.4rem;
@@ -173,7 +226,8 @@
   align-items: center;
   gap: 0.45rem;
   color: rgba(255, 255, 255, 0.28);
-  z-index: 2;
+  z-index: 6;
+  pointer-events: none;
 }
 
 .mobileCue span {

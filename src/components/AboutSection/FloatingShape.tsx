@@ -120,7 +120,7 @@ export function FloatingShape() {
     if (!el) return;
     const obs = new IntersectionObserver(
       ([entry]) => setActive(entry.isIntersecting),
-      { threshold: 0.01 }
+      { rootMargin: "300px 0px", threshold: 0 }
     );
     obs.observe(el);
     return () => obs.disconnect();

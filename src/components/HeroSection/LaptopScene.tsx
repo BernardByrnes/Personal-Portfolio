@@ -3,7 +3,7 @@
 import { useRef, useMemo, Suspense } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
-import { EffectComposer, Bloom, ChromaticAberration, Vignette } from "@react-three/postprocessing";
+import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import * as THREE from "three";
 import { Laptop } from "./Laptop";
 
@@ -12,7 +12,7 @@ function Particles() {
   const ref = useRef<THREE.Points>(null!);
 
   const geometry = useMemo(() => {
-    const count = 160;
+    const count = 80;
     const pos   = new Float32Array(count * 3);
     const col   = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
@@ -77,7 +77,7 @@ function CameraRig({ progress, mouse }: SceneProps) {
       new THREE.QuadraticBezierCurve3(
         new THREE.Vector3(0,   1.2, -5.5),  // start: close to back of closed lid
         new THREE.Vector3(0,   6.5,  0.5),  // control: high arc
-        new THREE.Vector3(2.8, 2.0,  8.0)   // end: front 3/4 pulled back
+        new THREE.Vector3(2.2, 1.8,  6.2)   // end: front 3/4, closer
       ),
     []
   );
@@ -122,13 +122,7 @@ function Scene({ progress, mouse }: SceneProps) {
 
       {/* Lighting */}
       <ambientLight intensity={0.90} />
-      <directionalLight
-        position={[3, 6, 3]}
-        intensity={2.4}
-        castShadow
-        shadow-mapSize={[1024, 1024]}
-        shadow-bias={-0.001}
-      />
+      <directionalLight position={[3, 6, 3]} intensity={2.4} />
       {/* Rim light — edges of aluminium */}
       <directionalLight position={[-4, 3, -4]} intensity={0.85} color="#8899ff" />
       {/* Fill from behind — primary light for the closed-lid opening shot */}
@@ -147,7 +141,6 @@ function Scene({ progress, mouse }: SceneProps) {
 
       <EffectComposer>
         <Bloom luminanceThreshold={0.55} luminanceSmoothing={0.35} intensity={0.45} />
-        <ChromaticAberration offset={new THREE.Vector2(0.0004, 0.0004)} />
         <Vignette offset={0.4} darkness={0.55} />
       </EffectComposer>
     </>
@@ -159,7 +152,6 @@ export type { SceneProps };
 export function LaptopScene({ progress, mouse }: SceneProps) {
   return (
     <Canvas
-      shadows
       dpr={[1, 1.5]}
       gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
       camera={{ position: [0, 1.2, -5.5], fov: 42, near: 0.1, far: 60 }}
