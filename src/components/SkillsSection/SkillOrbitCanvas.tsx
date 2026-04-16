@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useMemo, useState } from "react";
+import { useRef, useMemo, useState, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import * as THREE from "three";
@@ -132,6 +132,8 @@ export type SkillOrbitCanvasProps = {
 
 export function SkillOrbitCanvas({ onHover = () => {} }: SkillOrbitCanvasProps) {
   const [grabbing, setGrabbing] = useState(false);
+  const [active, setActive] = useState(false);
+  const wrapRef = useRef<HTMLDivElement>(null);
 
   const drag = useRef<DragState>({
     active: false,
@@ -140,6 +142,17 @@ export function SkillOrbitCanvas({ onHover = () => {} }: SkillOrbitCanvasProps) 
     velX:   0,
     velY:   0,
   });
+
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([entry]) => setActive(entry.isIntersecting), {
+      rootMargin: "200px 0px",
+      threshold: 0
+    });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
 
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     drag.current.active = true;
@@ -168,6 +181,7 @@ export function SkillOrbitCanvas({ onHover = () => {} }: SkillOrbitCanvasProps) 
 
   return (
     <div
+      ref={wrapRef}
       style={{
         width:       "100%",
         height:      "100%",
@@ -180,8 +194,8 @@ export function SkillOrbitCanvas({ onHover = () => {} }: SkillOrbitCanvasProps) 
       onPointerLeave={onPointerUp}
     >
       <Canvas
-        frameloop="always"
-        dpr={[1, 1.5]}
+        frameloop={active ? "always" : "demand"}
+        dpr={[1, 1.2]}
         gl={{ antialias: true, alpha: true }}
         camera={{ position: [0, 0.4, 7.5], fov: 50 }}
       >

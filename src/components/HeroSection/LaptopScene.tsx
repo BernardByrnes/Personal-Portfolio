@@ -3,7 +3,6 @@
 import { useRef, useMemo, Suspense } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
-import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import * as THREE from "three";
 import { Laptop } from "./Laptop";
 import { SkillGhost } from "./SkillGhost";
@@ -140,11 +139,6 @@ function Scene({ progress, mouse }: SceneProps) {
       <Particles />
 
       <fog attach="fog" args={["#0c0c12", 14, 32]} />
-
-      <EffectComposer>
-        <Bloom luminanceThreshold={0.55} luminanceSmoothing={0.35} intensity={0.45} />
-        <Vignette offset={0.4} darkness={0.55} />
-      </EffectComposer>
     </>
   );
 }
@@ -154,7 +148,7 @@ export type { SceneProps };
 export function LaptopScene({ progress, mouse }: SceneProps) {
   return (
     <Canvas
-      dpr={[1, 1.5]}
+      dpr={[1, 1.2]}
       gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
       camera={{ position: [0, 1.2, -5.5], fov: 42, near: 0.1, far: 60 }}
       style={{ background: "#0e0e14" }}
