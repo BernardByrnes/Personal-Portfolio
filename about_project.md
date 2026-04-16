@@ -43,8 +43,9 @@ src/
                           (typewriter), keyboard keys (InstancedMesh ×2 + 12 wide-key meshes)
       LaptopScene.tsx   — R3F Canvas, camera arc rig, ambient particles, lighting,
                           Environment map (city HDRI), Bloom + Vignette post-processing
-    AboutSection/       — bio text, stat cards, "currently" box, CV download,
-                          gradient drift bg, FloatingShape with Rapier physics
+    AboutSection/       — bio text, profile image (portfolio.png), stat cards,
+                          "currently" box, CV download, gradient drift bg,
+                          FloatingShape with Rapier physics
     ProjectsSection/    — staggered masonry grid, cinematic hover overlay, project modal
     SkillsSection/      — fibonacci-sphere skill orbit (R3F + drei Html nodes)
     ContactSection/     — film end-credits layout, fade to black at bottom
@@ -177,6 +178,7 @@ Only on first visit (`localStorage.hasVisited`). GSAP timeline: fade in → coun
 
 ### AboutSection
 - Slow animated background: two radial gradients with `backgroundPosition` animated (12s, yoyo)
+- Profile image (`/portfolio.png`) rendered using a standard `img` tag to guarantee GSAP animations (like ScrollTrigger fades) work correctly without Next.js hydration interference.
 - 2-column layout (body left, sidebar right) at `≥ 1024px`
 - CV download link (`/Bernard Mutambo CV.pdf`) in the sidebar
 - **FloatingShape** (decorative, bottom-right, `opacity: 0.28`):
@@ -242,8 +244,8 @@ To change owner info: edit `constants.ts`.
 ## Known Gaps / Things to Be Aware Of
 
 - **Project images are placeholders** — `images[]` points to `/projects/*.jpg` paths that don't exist. Real images need to be dropped into `/public/projects/`.
-- **CV file required** — `/public/Bernard Mutambo CV.pdf` must exist for the download link to work.
 - **Video file required** — `/public/videos/hero-video.mp4` must exist for the hero video layers to render. Section still scrolls correctly without it.
+- **Hydration warnings** — The root layout uses `suppressHydrationWarning` on `<html>` and `<body>` tags to prevent React from throwing mismatch errors when browser extensions (or test environments) inject attributes unexpectedly.
 - **Environment HDRI loads from CDN** — `@react-three/drei` fetches the city preset from `raw.githack.com`. Wrapped in `<Suspense fallback={null}>` so a network failure or slow load won't block the scene.
 - **Rapier WASM** — `@react-three/rapier` loads a ~800 KB WASM binary on first render of the About section. The `setTimeout(300)` before setting initial velocities gives WASM time to initialise.
 - **SVG clip-path font dependency** — hero text mask depends on the Syne font being loaded before the SVG `<clipPath>` renders. No explicit `document.fonts.ready` guard.

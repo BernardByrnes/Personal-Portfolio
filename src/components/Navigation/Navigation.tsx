@@ -106,7 +106,11 @@ export default function Navigation() {
         </ul>
 
         <div className={styles.navRight}>
-          <a href={`mailto:${PORTFOLIO.email}`} className={styles.ctaBtn}>
+          <a 
+            href="#contact" 
+            className={styles.ctaBtn}
+            onClick={(e) => handleNavClick(e, "#contact")}
+          >
             Hire Me
           </a>
 
@@ -144,7 +148,11 @@ export default function Navigation() {
               </li>
             ))}
           </ul>
-          <a href={`mailto:${PORTFOLIO.email}`} className={styles.drawerCta}>
+          <a 
+            href="#contact" 
+            className={styles.drawerCta}
+            onClick={(e) => handleNavClick(e, "#contact")}
+          >
             Hire Me
           </a>
         </div>

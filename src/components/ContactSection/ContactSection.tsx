@@ -3,7 +3,7 @@
 import { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Mail, Globe, Code2, Send } from "lucide-react";
+import { Mail, Globe, Code2, Send, Phone } from "lucide-react";
 import { PORTFOLIO } from "@/lib/constants";
 import ContactForm from "./ContactForm";
 import styles from "./ContactSection.module.css";
@@ -95,6 +95,12 @@ export default function ContactSection() {
           </a>
           <a href={`mailto:${PORTFOLIO.email}`} className={styles.socialLink}>
             <Mail size={16} /><span>{PORTFOLIO.email}</span>
+          </a>
+          <a href="tel:+256700606335" className={styles.socialLink}>
+            <Phone size={16} /><span>+256 700 606 335</span>
+          </a>
+          <a href="tel:+256788139736" className={styles.socialLink}>
+            <Phone size={16} /><span>+256 788 139 736</span>
           </a>
         </div>
 

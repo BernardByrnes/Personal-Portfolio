@@ -2,89 +2,88 @@ import { Project } from "@/types";
 
 export const projects: Project[] = [
   {
-    id: "analytics-dashboard",
-    title: "Real-Time Analytics Dashboard",
-    tagline: "Transforming data chaos into actionable insights",
+    id: "tasc-lms",
+    title: "TASC LMS",
+    tagline: "Enterprise learning management at institutional scale",
     description:
-      "Built a real-time analytics platform that processes 10M+ events daily, reducing reporting time from hours to seconds.",
+      "A full-stack Learning Management System serving as a centralised hub for course delivery, student progress tracking, and institutional analytics. Built for real organisations with role-based access for admins, instructors, and learners.",
     challenge:
-      "The existing system relied on batch processing with 24-hour delays, making real-time decision-making impossible for the ops team.",
+      "Educational institutions needed a single platform that could handle content delivery, live assessments, and granular analytics without the cost of commercial LMS vendors.",
     solution:
-      "Architected a WebSocket-based streaming pipeline with Redis caching and React Query for optimistic updates, achieving sub-second data freshness.",
+      "Architected a Django REST backend with a React/TypeScript frontend, PostgreSQL for relational data, and TanStack Query for snappy, cache-aware UI updates. Role-scoped analytics endpoints keep data access policy-compliant.",
     impact:
-      "Reduced reporting latency by 99.8%, increased team productivity by 40%, and enabled data-driven decisions that improved operational efficiency by 25%.",
-    techStack: ["React", "TypeScript", "WebSocket", "Redis", "D3.js", "TailwindCSS"],
-    images: ["/projects/analytics-1.jpg", "/projects/analytics-2.jpg"],
-    liveUrl: "https://demo.example.com",
-    githubUrl: "https://github.com/mutambo/project",
+      "Deployed to a live organisation at tasclms.com. Handles multi-role authentication, quiz engines, submission workflows, and manager-level reporting dashboards.",
+    techStack: ["React", "TypeScript", "Django", "PostgreSQL", "TanStack Query", "REST APIs"],
+    images: ["/projects/TASC_lms.png"],
+    liveUrl: "https://www.tasclms.com/",
     featured: true,
   },
   {
-    id: "ecommerce-platform",
-    title: "Next-Gen E-Commerce Platform",
-    tagline: "Reimagining online shopping experiences",
+    id: "gta-vi-fansite",
+    title: "GTA VI Fansite",
+    tagline: "A cinematic web experience built for a cultural moment",
     description:
-      "Developed a headless e-commerce solution with server-side rendering and edge caching, delivering sub-100ms page loads globally.",
+      "A high-fidelity fan landing page for GTA VI, engineered to feel like an official Rockstar property. Focuses on scroll-driven storytelling, viewport-filling visuals, and buttery-smooth GSAP choreography.",
     challenge:
-      "Legacy monolithic architecture caused 8+ second load times during peak traffic, resulting in 60% cart abandonment.",
+      "Recreating the cinematic weight and production polish of Rockstar's marketing using only open-web technologies and no backend.",
     solution:
-      "Migrated to a composable architecture using Next.js 14, Vercel Edge Network, and Stripe integration with optimistic UI updates.",
+      "Leveraged React with GSAP ScrollTrigger for timeline-driven animations, carefully layered CSS compositing for depth effects, and TypeScript for a maintainable component architecture.",
     impact:
-      "Achieved 99.99% uptime during Black Friday, increased conversion rate by 35%, and reduced bounce rate by 50%.",
-    techStack: ["Next.js", "TypeScript", "Stripe", "Vercel", "TailwindCSS", "Zustand"],
-    images: ["/projects/ecommerce-1.jpg"],
-    liveUrl: "https://shop.example.com",
+      "Demonstrates mastery of complex animation choreography and large-scale visual composition, featuring skills that transfer directly to high-end marketing and product landing pages.",
+    techStack: ["React", "TypeScript", "GSAP", "ScrollTrigger", "CSS3"],
+    images: ["/projects/GTA_VI.png"],
+    liveUrl: "https://gtavimay.netlify.app/",
     featured: true,
   },
   {
-    id: "ai-chat-interface",
-    title: "AI-Powered Chat Interface",
-    tagline: "Where artificial intelligence meets intuitive design",
+    id: "news-blogs-dashboard",
+    title: "News & Blogs Dashboard",
+    tagline: "Real-time news meets personal storytelling in one hub",
     description:
-      "Created a next-generation AI chat application with real-time streaming responses, code syntax highlighting, and markdown support.",
+      "A comprehensive information platform that merges live global news with a personal blogging system. Users can browse headlines by category, bookmark articles, and manage their own content — all in a single dashboard.",
     challenge:
-      "Existing chat interfaces felt static and unresponsive, with users waiting 10+ seconds for AI responses.",
+      "Building a 'serverless' feel with full CRUD capabilities and live API data, without a dedicated backend, while keeping the UI snappy and the data persistent across sessions.",
     solution:
-      "Implemented WebSocket streaming with Server-Sent Events fallback, custom markdown renderer, and smooth message animations.",
+      "Integrated the GNews API and OpenWeatherMap API via Axios, built a complete blog CMS with localStorage persistence, and added productivity widgets (weather tracker, calendar), all in a clean Vite + React architecture.",
     impact:
-      "User engagement increased by 200%, average session duration grew to 15 minutes, and NPS score improved from 45 to 72.",
-    techStack: ["React", "OpenAI API", "Markdown", "GSAP", "TailwindCSS", "Radix UI"],
-    images: ["/projects/chat-1.jpg", "/projects/chat-2.jpg"],
-    liveUrl: "https://chat.example.com",
-    githubUrl: "https://github.com/mutambo/ai-chat",
-    featured: true,
-  },
-  {
-    id: "collaborative-editor",
-    title: "Real-Time Collaborative Editor",
-    tagline: "Multiple minds, one seamless experience",
-    description:
-      "Built a Google Docs-style collaborative editor with CRDT-based conflict resolution and presence indicators.",
-    challenge:
-      "Teams struggled with version conflicts and lost work when multiple people edited documents simultaneously.",
-    solution:
-      "Implemented Yjs for CRDT conflict resolution, WebSocket for real-time sync, and operational transforms for seamless collaboration.",
-    impact:
-      "Enabled 50+ simultaneous collaborators per document, eliminated data loss incidents, and improved team productivity by 30%.",
-    techStack: ["React", "TypeScript", "Yjs", "WebSocket", "Monaco Editor", "TailwindCSS"],
-    images: ["/projects/editor-1.jpg"],
+      "Showcases API integration, React state management with hooks, CRUD mastery, and client-side persistence (core skills expected in any professional frontend role).",
+    techStack: ["React", "Vite", "Axios", "GNews API", "LocalStorage", "CSS3"],
+    images: ["/projects/News_&_Blogs_Dashboard.png"],
+    liveUrl: "https://newsblog2.netlify.app/",
     featured: false,
   },
   {
-    id: "fitness-tracker",
-    title: "Mobile-First Fitness Tracker",
-    tagline: "Your personal fitness journey, visualized",
+    id: "weather-dashboard",
+    title: "Weather Dashboard",
+    tagline: "Glassmorphism UI meets live atmospheric data",
     description:
-      "Developed a progressive web app for tracking workouts, nutrition, and progress with beautiful data visualizations.",
+      "A modern, responsive weather dashboard that delivers instant atmospheric data with a premium glassmorphism aesthetic. Dynamic theming automatically shifts background and iconography to match real-world conditions.",
     challenge:
-      "Users needed a simple way to track complex fitness data across devices without the complexity of traditional apps.",
+      "Creating a UI that felt premium and alive (not just a data dump) while handling async API states, error conditions, and dynamic visual theming cleanly.",
     solution:
-      "Created an offline-first PWA with IndexedDB storage, beautiful Chart.js visualizations, and device sync capabilities.",
+      "Built dynamic weather-code-to-asset mapping for automatic visual theming, used React useEffect for async data fetching with proper error/loading states, and designed a glassmorphism layout with smooth CSS transitions.",
     impact:
-      "Achieved 10,000+ active users within 3 months, 4.8-star app store rating, and 85% daily active user retention.",
-    techStack: ["React", "PWA", "IndexedDB", "Chart.js", "TypeScript", "TailwindCSS"],
-    images: ["/projects/fitness-1.jpg", "/projects/fitness-2.jpg"],
-    liveUrl: "https://fitness.example.com",
+      "Demonstrates polished UI/UX thinking, dynamic rendering logic, and performance-optimised builds via Vite, all visible at a glance to a hiring manager.",
+    techStack: ["React", "Vite", "OpenWeatherMap API", "CSS3", "FontAwesome"],
+    images: ["/projects/weather app.png"],
+    liveUrl: "https://weatherultimate.netlify.app/",
+    featured: false,
+  },
+  {
+    id: "bobi-vs-muhoozi",
+    title: "Bobi vs Muhoozi",
+    tagline: "Political data made visceral through interactive charts",
+    description:
+      "An interactive data visualisation comparing two prominent Ugandan political figures across key metrics. Designed to make complex political data immediately legible and engaging through animation and layered charting.",
+    challenge:
+      "Political datasets are dry. The challenge was making the comparison feel immediate, emotionally legible, and shareable without misleading the reader.",
+    solution:
+      "Combined React Charts and D3 for rich, custom visualisations, used GSAP for entrance animations that guide the reader's eye, and TypeScript to keep the data pipeline clean and type-safe.",
+    impact:
+      "Proves ability to work with data-heavy UIs, custom charting beyond off-the-shelf defaults, and GSAP animation in a non-entertainment context.",
+    techStack: ["React", "TypeScript", "D3.js", "React Charts", "GSAP"],
+    images: ["/projects/muhooziBobi.png"],
+    liveUrl: "https://muhoozibobicharts2.netlify.app/",
     featured: false,
   },
 ];

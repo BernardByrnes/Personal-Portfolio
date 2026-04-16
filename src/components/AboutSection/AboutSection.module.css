@@ -47,6 +47,7 @@
 
 /* ─── Profile image ───────────────────────────────────────────── */
 .imageWrapper {
+  position: relative;
   width: 100%;
   max-width: 240px;
   aspect-ratio: 3 / 4;
@@ -265,6 +266,50 @@
 .githubLink:hover {
   color: #ffffff;
   border-color: rgba(255, 255, 255, 0.25);
+}
+
+.directContact {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.contactEmail {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: #667eea;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  width: fit-content;
+}
+
+.contactEmail:hover {
+  color: #ffffff;
+}
+
+.contactPhones {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.45);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  letter-spacing: 0.05em;
+}
+
+.phoneLink {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.phoneLink:hover {
+  color: #ffffff;
+}
+
+.separator {
+  color: rgba(255, 255, 255, 0.1);
 }
 
 /* ─── Decorative 3D shape ─────────────────────────────────────── */

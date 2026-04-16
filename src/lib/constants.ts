@@ -3,7 +3,7 @@ export const PORTFOLIO = {
   title: "Software Developer",
   tagline: "I build interfaces that feel alive through motion, design, and performance.",
   email: "bernardtambo40@gmail.com",
-  github: "https://github.com/mutambo",
+  github: "https://github.com/BernardByrnes",
   linkedin: "https://linkedin.com/in/mutambo",
   twitter: "https://twitter.com/mutambo",
 };

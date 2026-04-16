@@ -6,6 +6,7 @@ import { Environment } from "@react-three/drei";
 import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import * as THREE from "three";
 import { Laptop } from "./Laptop";
+import { SkillGhost } from "./SkillGhost";
 
 /* ── Ambient particle field around the laptop ─────────────── */
 function Particles() {
@@ -135,6 +136,7 @@ function Scene({ progress, mouse }: SceneProps) {
       </Suspense>
 
       <Laptop progress={progress} />
+      <SkillGhost progress={progress} mouse={mouse} />
       <Particles />
 
       <fog attach="fog" args={["#0c0c12", 14, 32]} />

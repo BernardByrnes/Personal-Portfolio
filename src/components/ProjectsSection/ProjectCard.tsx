@@ -66,9 +66,17 @@ export default function ProjectCard({ project, onClick, featured }: ProjectCardP
     >
       {/* Background image area */}
       <div className={styles.cardImage}>
-        <div className={styles.cardImagePlaceholder}>
-          <span>{project.title.charAt(0)}</span>
-        </div>
+        {project.images && project.images.length > 0 ? (
+          <img 
+            src={project.images[0]} 
+            alt={project.title} 
+            style={{ width: "100%", height: "100%", objectFit: "cover" }} 
+          />
+        ) : (
+          <div className={styles.cardImagePlaceholder}>
+            <span>{project.title.charAt(0)}</span>
+          </div>
+        )}
       </div>
 
       {/* Cinematic hover overlay */}

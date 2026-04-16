@@ -9,7 +9,7 @@ const CODE_LINES = [
   "const portfolio = {",
   "  name: 'Mutambo Bernard',",
   "  role: 'Software Developer',",
-  "  stack: ['Next.js', 'R3F', 'GSAP'],",
+  "  stack: ['Next.js', 'React', 'TypeScript'],",
   "  shipped: 20,",
   "  events: '10M+ / day',",
   "  open: true,",

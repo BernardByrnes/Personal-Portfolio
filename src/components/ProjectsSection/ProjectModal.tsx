@@ -85,9 +85,17 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
 
         {/* Hero area */}
         <div className={styles.heroArea}>
-          <div className={styles.heroPlaceholder}>
-            <span>{project.title.charAt(0)}</span>
-          </div>
+          {project.images && project.images.length > 0 ? (
+            <img 
+              src={project.images[0]} 
+              alt={project.title} 
+              style={{ width: "100%", height: "100%", objectFit: "cover", position: "absolute", inset: 0 }} 
+            />
+          ) : (
+            <div className={styles.heroPlaceholder}>
+              <span>{project.title.charAt(0)}</span>
+            </div>
+          )}
           <div className={styles.heroOverlay} />
         </div>
 

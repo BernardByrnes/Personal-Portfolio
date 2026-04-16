@@ -2,9 +2,12 @@
 
 import { useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./AboutSection.module.css";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const FloatingShape = dynamic(
   () => import("./FloatingShape").then(m => m.FloatingShape),
@@ -85,10 +88,11 @@ export default function AboutSection() {
         <div className={styles.layout}>
           {/* Profile image */}
           <div ref={imageRef} className={styles.imageWrapper}>
-            <div className={styles.imagePlaceholder}>
-              <span className={styles.imagePlaceholderIcon}>+</span>
-              <span className={styles.imagePlaceholderText}>Add your photo</span>
-            </div>
+            <img
+              src="/portfolio.png"
+              alt="Mutambo Bernard"
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            />
           </div>
 
           {/* Body */}
@@ -101,9 +105,7 @@ export default function AboutSection() {
             <p className={styles.lead}>
               Frontend Developer with 2+ years building production dashboards,
               editorial platforms, and animated interfaces for clients across
-              media, education, and logistics. Worked as Visualization Engineer
-              at <strong>Thraets</strong> — translating complex datasets into
-              visual narratives that readers actually engage with.
+              media, education, and logistics.
             </p>
 
             <p>
@@ -157,6 +159,17 @@ export default function AboutSection() {
                 </svg>
                 GitHub
               </a>
+            </div>
+
+            <div className={styles.directContact}>
+              <a href={`mailto:bernardtambo40@gmail.com`} className={styles.contactEmail}>
+                bernardtambo40@gmail.com
+              </a>
+              <div className={styles.contactPhones}>
+                <a href="tel:+256700606335" className={styles.phoneLink}>+256 700 606 335</a>
+                <span className={styles.separator}>/</span>
+                <a href="tel:+256788139736" className={styles.phoneLink}>+256 788 139 736</a>
+              </div>
             </div>
           </div>
         </div>

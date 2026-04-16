@@ -1,4 +1,13 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(xargs grep:*)",
+      "Bash(node -e \"const pkg=require\\('d:/portfolio/node_modules/react-icons/package.json'\\);console.log\\(pkg.version\\)\")",
+      "Bash(node -e \"const {execSync}=require\\('child_process'\\);try{execSync\\('npx tsc --noEmit',{cwd:'d:/portfolio',timeout:90000}\\);console.log\\('OK'\\)}catch\\(e\\){console.log\\(e.stdout?.toString\\(\\)||e.message\\)}\")",
+      "Bash(node -e \"const si=require\\('d:/portfolio/node_modules/react-icons/si'\\);['SiJupyter','SiApachespark','SiApachekafka','SiClickhouse','SiPython'].forEach\\(n=>console.log\\(n,!!si[n]\\)\\)\")",
+      "Bash(node -e \"const {execSync}=require\\('child_process'\\);try{const r=execSync\\('npx next build 2>&1',{timeout:120000}\\);console.log\\(r.toString\\(\\)\\)}catch\\(e\\){console.log\\(e.stdout?.toString\\(\\)||e.message\\)}\")"
+    ]
+  },
   "hooks": {
     "PreToolUse": [
       {
@@ -10,11 +19,6 @@
           }
         ]
       }
-    ]
-  },
-  "permissions": {
-    "allow": [
-      "Bash(xargs grep:*)"
     ]
   }
 }
