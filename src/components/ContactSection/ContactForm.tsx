@@ -13,6 +13,7 @@ export default function ContactForm() {
   const formRef = useRef<HTMLFormElement>(null);
   const [status, setStatus] = useState<FormStatus>("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -37,6 +38,27 @@ export default function ContactForm() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+    // Custom validation
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const name = formData.get("from_name") as string;
+    const email = formData.get("from_email") as string;
+    const subject = formData.get("subject") as string;
+    const message = formData.get("message") as string;
+
+    const errors: Record<string, string> = {};
+    if (!name || name.trim().length < 2) errors.from_name = "Name must be at least 2 characters.";
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.from_email = "Please enter a valid email address.";
+    if (!subject || subject.trim().length < 5) errors.subject = "Subject must be at least 5 characters.";
+    if (!message || message.trim().length < 20) errors.message = "Message must be at least 20 characters.";
+
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors);
+      return;
+    }
+
+    setValidationErrors({});
     setStatus("sending");
     setErrorMessage("");
 
@@ -77,13 +99,11 @@ export default function ContactForm() {
             type="text"
             id="from_name"
             name="from_name"
-            required
-            minLength={2}
-            maxLength={100}
             disabled={status === "sending"}
             placeholder="Your name"
-            aria-required="true"
+            aria-invalid={!!validationErrors.from_name}
           />
+          {validationErrors.from_name && <span className={styles.errorText}>{validationErrors.from_name}</span>}
         </div>
 
         <div className={styles.field}>
@@ -92,11 +112,11 @@ export default function ContactForm() {
             type="email"
             id="from_email"
             name="from_email"
-            required
             disabled={status === "sending"}
             placeholder="your@email.com"
-            aria-required="true"
+            aria-invalid={!!validationErrors.from_email}
           />
+          {validationErrors.from_email && <span className={styles.errorText}>{validationErrors.from_email}</span>}
         </div>
       </div>
 
@@ -106,13 +126,11 @@ export default function ContactForm() {
           type="text"
           id="subject"
           name="subject"
-          required
-          minLength={5}
-          maxLength={200}
           disabled={status === "sending"}
           placeholder="What's this about?"
-          aria-required="true"
+          aria-invalid={!!validationErrors.subject}
         />
+        {validationErrors.subject && <span className={styles.errorText}>{validationErrors.subject}</span>}
       </div>
 
       <div className={styles.field}>
@@ -120,14 +138,12 @@ export default function ContactForm() {
         <textarea
           id="message"
           name="message"
-          required
-          minLength={20}
-          maxLength={2000}
           rows={5}
           disabled={status === "sending"}
           placeholder="Tell me about your project..."
-          aria-required="true"
+          aria-invalid={!!validationErrors.message}
         />
+        {validationErrors.message && <span className={styles.errorText}>{validationErrors.message}</span>}
       </div>
 
       {/* Live region for screen readers */}
@@ -142,10 +158,10 @@ export default function ContactForm() {
         className={styles.submitButton}
         data-status={status}
       >
-        {status === "idle" && (<><Send size={16} />Send Message</>)}
-        {status === "sending" && (<><div className={styles.spinner} aria-hidden="true" />Sending...</>)}
-        {status === "success" && (<><CheckCircle size={16} />Sent Successfully!</>)}
-        {status === "error" && (<><AlertCircle size={16} />Try Again</>)}
+        {status === "idle" && (<><Send size={16} /><span>Send Message</span></>)}
+        {status === "sending" && (<><div className={styles.spinner} aria-hidden="true" /><span>Sending...</span></>)}
+        {status === "success" && (<><CheckCircle size={16} /><span>Sent Successfully!</span></>)}
+        {status === "error" && (<><AlertCircle size={16} /><span>Try Again</span></>)}
       </button>
 
       {status === "error" && (

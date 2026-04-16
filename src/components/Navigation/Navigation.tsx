@@ -111,7 +111,7 @@ export default function Navigation() {
             className={styles.ctaBtn}
             onClick={(e) => handleNavClick(e, "#contact")}
           >
-            Hire Me
+            <span>Hire Me</span>
           </a>
 
           {/* Hamburger — mobile only */}
@@ -153,7 +153,7 @@ export default function Navigation() {
             className={styles.drawerCta}
             onClick={(e) => handleNavClick(e, "#contact")}
           >
-            Hire Me
+            <span>Hire Me</span>
           </a>
         </div>
       </div>
