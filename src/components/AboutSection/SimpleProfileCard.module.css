@@ -5,12 +5,14 @@
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: transparent;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .imageWrap {
   width: 100%;
   line-height: 0;
+  border-radius: 20px 20px 0 0;
+  overflow: hidden;
 }
 
 .image {
@@ -20,12 +22,14 @@
 }
 
 .body {
-  padding: 1.25rem 1.35rem 1.35rem;
+  padding: 1.25rem 1.35rem 3.25rem;
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
   background: rgba(15, 19, 28, 0.95);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0 0 20px 20px;
+  overflow: visible;
 }
 
 .name {
@@ -52,6 +56,8 @@
 }
 
 .cta {
+  --cta-paint: rgb(102, 126, 234);
+  position: relative;
   align-self: flex-start;
   margin-top: 0.15rem;
   padding: 0.55rem 1rem;
@@ -59,13 +65,135 @@
   font-size: 0.8rem;
   font-weight: 600;
   color: #fff;
-  background: rgba(102, 126, 234, 0.25);
-  border: 1px solid rgba(102, 126, 234, 0.45);
+  background: var(--cta-paint);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 8px;
   cursor: pointer;
+  box-shadow: 0 4px 14px rgba(102, 126, 234, 0.35);
+  transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+  overflow: visible;
+}
+
+.cta:hover {
+  --cta-paint: rgb(118, 138, 242);
+  background: var(--cta-paint);
+  box-shadow: 0 6px 18px rgba(102, 126, 234, 0.45);
+}
+
+.cta:active {
+  transform: scale(0.98);
+}
+
+.ctaLabel {
+  position: relative;
+  z-index: 1;
 }
 
 .cta:focus-visible {
-  outline: 2px solid rgba(102, 126, 234, 0.8);
+  outline: 2px solid rgba(102, 126, 234, 0.9);
   outline-offset: 2px;
+}
+
+.drips {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 0;
+  pointer-events: none;
+}
+
+.drip {
+  position: absolute;
+  top: -2px;
+  width: 14px;
+  background-color: var(--cta-paint);
+  border-bottom-left-radius: 9999px;
+  border-bottom-right-radius: 9999px;
+  height: 0;
+  animation: profileCtaDrip 4s ease-in-out infinite;
+}
+
+.drip::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 14px;
+  background-color: var(--cta-paint);
+  border-radius: 50%;
+  opacity: 0;
+  animation: profileCtaDropFall 4s ease-in infinite;
+}
+
+.drip1 {
+  left: 15%;
+  animation-delay: 0s;
+}
+
+.drip1::after {
+  animation-delay: 1.5s;
+}
+
+.drip2 {
+  left: 40%;
+  animation-delay: 1s;
+  width: 10px;
+}
+
+.drip2::after {
+  animation-delay: 2.5s;
+}
+
+.drip3 {
+  left: 65%;
+  animation-delay: 2s;
+  width: 12px;
+}
+
+.drip3::after {
+  animation-delay: 3.5s;
+}
+
+.drip4 {
+  left: 85%;
+  animation-delay: 0.5s;
+  width: 8px;
+}
+
+.drip4::after {
+  animation-delay: 2s;
+}
+
+@keyframes profileCtaDrip {
+  0% {
+    height: 0;
+  }
+  40% {
+    height: 30px;
+  }
+  60% {
+    height: 30px;
+  }
+  100% {
+    height: 10px;
+  }
+}
+
+@keyframes profileCtaDropFall {
+  0%,
+  50% {
+    opacity: 0;
+    transform: translate(-50%, 0);
+  }
+  60% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, 40px);
+  }
 }

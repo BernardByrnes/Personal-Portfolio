@@ -26,7 +26,13 @@ export default function SimpleProfileCard({ onContactClick }: SimpleProfileCardP
         <p className={styles.role}>Software Developer</p>
         <p className={styles.meta}>Available for work</p>
         <button type="button" className={styles.cta} onClick={onContactClick}>
-          Contact me
+          <span className={styles.ctaLabel}>Contact me</span>
+          <span className={styles.drips} aria-hidden>
+            <span className={`${styles.drip} ${styles.drip1}`} />
+            <span className={`${styles.drip} ${styles.drip2}`} />
+            <span className={`${styles.drip} ${styles.drip3}`} />
+            <span className={`${styles.drip} ${styles.drip4}`} />
+          </span>
         </button>
       </div>
     </article>

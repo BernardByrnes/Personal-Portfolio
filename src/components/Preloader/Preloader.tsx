@@ -16,13 +16,6 @@ export default function Preloader({ onComplete }: PreloaderProps) {
   const progressBarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const hasVisited = localStorage.getItem("hasVisited");
-
-    if (hasVisited) {
-      onComplete();
-      return;
-    }
-
     const tl = gsap.timeline();
 
     tl.fromTo(
@@ -31,14 +24,13 @@ export default function Preloader({ onComplete }: PreloaderProps) {
       { opacity: 1, duration: 0.6, ease: "power2.out" }
     );
 
-    // Animate a counter object from 0 → 100 (always forward, never random)
     const counter = { value: 0 };
 
     tl.to(
       counter,
       {
         value: 95,
-        duration: 2,
+        duration: 2.4,
         ease: "power1.inOut",
         onUpdate: () => {
           setProgress(Math.floor(counter.value));
@@ -51,28 +43,27 @@ export default function Preloader({ onComplete }: PreloaderProps) {
       counter,
       {
         value: 100,
-        duration: 0.5,
+        duration: 0.4,
         ease: "power2.out",
         onUpdate: () => {
           setProgress(Math.floor(counter.value));
         },
         onComplete: () => {
           setStatus("READY");
-          localStorage.setItem("hasVisited", "true");
         },
       },
-      2.6
+      3.0
     );
 
     tl.to(
       contentRef.current,
       {
         opacity: 0,
-        duration: 1.2,
+        duration: 0.8,
         ease: "power2.inOut",
         onComplete: onComplete,
       },
-      3.1
+      3.4
     );
 
     return () => {

@@ -25,8 +25,7 @@ export default function Home() {
       history.scrollRestoration = "manual";
     }
     window.scrollTo(0, 0);
-    const visited = localStorage.getItem("hasVisited");
-    setLoadingState(visited ? false : true);
+    setLoadingState(true);
   }, []);
 
   useEffect(() => {
@@ -87,18 +86,13 @@ export default function Home() {
     };
   }, [loadingState]);
 
-  if (loadingState === null) return null;
-
   const handlePreloaderComplete = () => {
     setLoadingState(false);
   };
 
-  if (loadingState) {
-    return <Preloader onComplete={handlePreloaderComplete} />;
-  }
-
   return (
     <>
+      {loadingState && <Preloader onComplete={handlePreloaderComplete} />}
       <CustomCursor />
       <ScrollProgress />
       <Navigation />
