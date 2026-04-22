@@ -28,11 +28,12 @@ const chips: Array<{ label: string; icon: any }> = [
 
 const words: Array<{ text: string; em?: boolean; br?: boolean }> = [
   { text: "I" },
-  { text: "craft" },
-  { text: "interfaces", br: true },
-  { text: "that" },
-  { text: "feel" },
-  { text: "alive.", em: true },
+  { text: "build" },
+  { text: "web" },
+  { text: "experiences", br: true },
+  { text: "people" },
+  { text: "enjoy" },
+  { text: "using.", em: true },
 ];
 
 export default function AboutSection() {
@@ -187,7 +188,7 @@ export default function AboutSection() {
 
             <h2
               className={styles.title}
-              aria-label="I craft interfaces that feel alive."
+              aria-label="I build web experiences people enjoy using."
             >
               {words.map(({ text, em, br }, i) => (
                 <span key={i} style={{ display: "contents" }}>
