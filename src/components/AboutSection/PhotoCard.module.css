@@ -1,0 +1,120 @@
+.floatWrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  will-change: transform;
+}
+
+.magneticWrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  will-change: transform;
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  transform-style: preserve-3d;
+  cursor: default;
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  background: linear-gradient(
+    145deg,
+    rgba(102, 126, 234, 0.15) 0%,
+    rgba(15, 15, 25, 0.95) 40%,
+    rgba(118, 75, 162, 0.12) 100%
+  );
+  border: 1px solid rgba(102, 126, 234, 0.18);
+  z-index: 0;
+  transform: translateZ(-20px);
+}
+
+.bgAccent {
+  position: absolute;
+  inset: -1px;
+  border-radius: 20px;
+  background: transparent;
+  box-shadow:
+    0 0 60px -10px rgba(102, 126, 234, 0.25),
+    0 0 120px -20px rgba(118, 75, 162, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  z-index: 0;
+  transform: translateZ(-10px);
+}
+
+.cursorLight {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: radial-gradient(
+    circle 180px at var(--mx, 50%) var(--my, 50%),
+    rgba(255, 255, 255, 0.05),
+    transparent 60%
+  );
+}
+
+.floatWrap:hover .cursorLight {
+  opacity: 1;
+}
+
+.imgWrap {
+  position: absolute;
+  inset: 0;
+  bottom: 64px;
+  border-radius: 18px 18px 0 0;
+  overflow: hidden;
+  z-index: 1;
+  transform: translateZ(50px);
+}
+
+.img {
+  object-fit: cover;
+  object-position: center top;
+}
+
+.nameTag {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 1.25rem;
+  border-top: 1px solid rgba(102, 126, 234, 0.15);
+  z-index: 2;
+  transform: translateZ(80px);
+}
+
+.name {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.88);
+  letter-spacing: 0.02em;
+  transform: translateZ(20px);
+  display: block;
+}
+
+.role {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: #667eea;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: 2px;
+  transform: translateZ(20px);
+  display: block;
+}

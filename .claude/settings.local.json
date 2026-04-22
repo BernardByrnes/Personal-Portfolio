@@ -6,7 +6,8 @@
       "Bash(npm install:*)",
       "Bash(cat node_modules/@react-three/postprocessing/dist/declarations/src/effects/ChromaticAberration.d.ts)",
       "Bash(cat node_modules/@react-three/postprocessing/dist/declarations/src/effects/Bloom.d.ts)",
-      "Bash(node -e \"const {BloomEffect} = require\\('postprocessing'\\); const b = new BloomEffect\\(\\); console.log\\(Object.keys\\(b\\)\\)\")"
+      "Bash(node -e \"const {BloomEffect} = require\\('postprocessing'\\); const b = new BloomEffect\\(\\); console.log\\(Object.keys\\(b\\)\\)\")",
+      "Bash(claude skill *)"
     ]
   }
 }

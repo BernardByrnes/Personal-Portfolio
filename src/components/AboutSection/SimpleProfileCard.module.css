@@ -1,0 +1,71 @@
+.card {
+  width: 100%;
+  max-width: 340px;
+  margin-inline: auto;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: transparent;
+  overflow: hidden;
+}
+
+.imageWrap {
+  width: 100%;
+  line-height: 0;
+}
+
+.image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.body {
+  padding: 1.25rem 1.35rem 1.35rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  background: rgba(15, 19, 28, 0.95);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: -0.02em;
+}
+
+.role {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.meta {
+  margin: 0 0 0.65rem;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: rgba(102, 126, 234, 0.95);
+}
+
+.cta {
+  align-self: flex-start;
+  margin-top: 0.15rem;
+  padding: 0.55rem 1rem;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #fff;
+  background: rgba(102, 126, 234, 0.25);
+  border: 1px solid rgba(102, 126, 234, 0.45);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.cta:focus-visible {
+  outline: 2px solid rgba(102, 126, 234, 0.8);
+  outline-offset: 2px;
+}

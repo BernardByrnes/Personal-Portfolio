@@ -1,26 +1,64 @@
+/* ─── Section ─────────────────────────────────────────────────────────────── */
 .section {
   position: relative;
   padding: 8rem 2rem;
-  background: #0a0a0a;
+  background: #0B0F17;
   min-height: 100vh;
   display: flex;
   align-items: center;
   overflow: hidden;
 }
 
-.gradientBg {
+/* ─── Ambient blobs — CSS only, zero JS cost ──────────────────────────────── */
+.blobWrap1 {
   position: absolute;
-  inset: -20%;
-  background:
-    radial-gradient(ellipse 60% 50% at 20% 50%, rgba(102, 126, 234, 0.04) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 60% at 80% 30%, rgba(118, 75, 162, 0.04) 0%, transparent 60%);
-  background-size: 200% 200%;
-  background-position: 0% 0%;
+  top: -15%;
+  left: -8%;
+  width: 55%;
+  height: 65%;
   pointer-events: none;
   z-index: 0;
-  will-change: background-position;
+  will-change: transform;
 }
 
+.blob1 {
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse 65% 55% at 50% 50%, rgba(102, 126, 234, 0.07) 0%, transparent 70%);
+  animation: drift1 28s ease-in-out infinite;
+}
+
+.blobWrap2 {
+  position: absolute;
+  bottom: -20%;
+  right: -5%;
+  width: 50%;
+  height: 60%;
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform;
+}
+
+.blob2 {
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse 55% 65% at 50% 50%, rgba(118, 75, 162, 0.06) 0%, transparent 70%);
+  animation: drift2 34s ease-in-out infinite;
+}
+
+@keyframes drift1 {
+  0%,  100% { transform: rotate(0deg)   translate(0,   0  ); }
+  33%       { transform: rotate(120deg) translate(2%,  -3%); }
+  66%       { transform: rotate(240deg) translate(-2%, 2% ); }
+}
+
+@keyframes drift2 {
+  0%,  100% { transform: rotate(0deg)    translate(0,   0  ); }
+  33%       { transform: rotate(-120deg) translate(-2%, 3% ); }
+  66%       { transform: rotate(-240deg) translate(2%,  -2%); }
+}
+
+/* ─── Container ───────────────────────────────────────────────────────────── */
 .container {
   position: relative;
   z-index: 1;
@@ -29,6 +67,7 @@
   margin: 0 auto;
 }
 
+/* ─── Label ───────────────────────────────────────────────────────────────── */
 .label {
   font-family: var(--font-mono);
   font-size: 0.75rem;
@@ -39,64 +78,70 @@
   margin-bottom: 3rem;
 }
 
+/* ─── Layout ──────────────────────────────────────────────────────────────── */
 .layout {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 3rem;
+  gap: 4rem;
+  align-items: center;
 }
 
-/* ─── Profile image ───────────────────────────────────────────── */
-.imageWrapper {
-  position: relative;
-  width: 100%;
-  max-width: 240px;
-  aspect-ratio: 3 / 4;
-  border-radius: 20px;
-  overflow: hidden;
-  flex-shrink: 0;
+@media (min-width: 1024px) {
+  .layout {
+    grid-template-columns: 1fr 360px;
+    gap: 5rem;
+  }
 }
 
-.imagePlaceholder {
-  width: 100%;
-  height: 100%;
-  border: 2px dashed rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
+/* ─── Profile card column — visible at all breakpoints (was desktop-only) ─ */
+.photoWrap {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  background: rgba(255, 255, 255, 0.02);
+  width: 100%;
+  max-width: min(360px, 100%);
+  margin-inline: auto;
+  margin-top: 2.5rem;
+  position: relative;
+  overflow: visible;
+  z-index: 2;
 }
 
-.imagePlaceholderIcon {
-  font-size: 2rem;
-  color: rgba(255, 255, 255, 0.12);
-  line-height: 1;
+@media (min-width: 1024px) {
+  .photoWrap {
+    height: 560px;
+    margin-top: 0;
+    max-width: none;
+  }
 }
 
-.imagePlaceholderText {
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  color: rgba(255, 255, 255, 0.18);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-/* ─── Body ────────────────────────────────────────────────────── */
+/* ─── Body ────────────────────────────────────────────────────────────────── */
 .body {
   display: flex;
   flex-direction: column;
   gap: 1.75rem;
 }
 
+/* ─── Word-split heading ──────────────────────────────────────────────────── */
 .title {
   font-family: var(--font-display);
   font-size: clamp(2.25rem, 5vw, 3.75rem);
   font-weight: 700;
   color: #ffffff;
-  line-height: 1.15;
+  line-height: 1.2;
   margin: 0;
+}
+
+/* Clip container — overflow hidden clips the yPercent slide */
+.wordWrap {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  margin-right: 0.26em;
+}
+
+.word {
+  display: inline-block;
 }
 
 .em {
@@ -104,20 +149,33 @@
   color: #667eea;
 }
 
+/* ─── Horizontal rule — signature moment ─────────────────────────────────── */
+.rule {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(102, 126, 234, 0.45) 0%, transparent 100%);
+  transform-origin: left center;
+  flex-shrink: 0;
+}
+
+/* ─── Body copy ───────────────────────────────────────────────────────────── */
 .lead {
   font-family: var(--font-body);
-  font-size: 1.1rem;
-  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.75);
   line-height: 1.75;
+  margin: 0;
 }
 
 .body p {
   font-family: var(--font-body);
   font-size: 1rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.45);
   line-height: 1.85;
+  margin: 0;
 }
 
+/* ─── Chips — tactile hover ───────────────────────────────────────────────── */
 .chips {
   display: flex;
   flex-wrap: wrap;
@@ -125,99 +183,52 @@
 }
 
 .chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  overflow: hidden;
   font-family: var(--font-mono);
   font-size: 0.7rem;
-  color: rgba(102, 126, 234, 0.9);
-  background: rgba(102, 126, 234, 0.08);
-  border: 1px solid rgba(102, 126, 234, 0.2);
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(102, 126, 234, 0.07);
+  border: 1px solid rgba(102, 126, 234, 0.18);
   border-radius: 6px;
   padding: 0.3rem 0.65rem;
   letter-spacing: 0.04em;
+  transition:
+    border-color 0.22s ease,
+    color 0.22s ease,
+    transform 0.22s ease,
+    background 0.22s ease;
 }
 
-/* ─── Sidebar ─────────────────────────────────────────────────── */
-.sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+/* Left accent line extends on hover */
+.chip::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #667eea;
+  transform: scaleY(0);
+  transform-origin: bottom center;
+  transition: transform 0.22s ease;
 }
 
-.stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.85rem;
-}
-
-.stat {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  padding: 1.25rem;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 14px;
-  transition: border-color 0.3s ease;
-}
-
-.stat:hover { border-color: rgba(255, 255, 255, 0.12); }
-
-.statValue {
-  font-family: var(--font-display);
-  font-size: 1.75rem;
-  font-weight: 700;
+.chip:hover {
+  border-color: rgba(102, 126, 234, 0.55);
   color: #ffffff;
-  line-height: 1;
+  transform: translateY(-2px);
+  background: rgba(102, 126, 234, 0.12);
 }
 
-.statLabel {
-  font-family: var(--font-body);
-  font-size: 0.65rem;
-  color: rgba(255, 255, 255, 0.35);
-  line-height: 1.4;
+.chip:hover::before {
+  transform: scaleY(1);
 }
 
-.currentlyBox {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  padding: 1.25rem 1.5rem;
-  background: rgba(102, 126, 234, 0.05);
-  border: 1px solid rgba(102, 126, 234, 0.18);
-  border-radius: 14px;
-}
-
-.dot {
-  width: 8px;
-  height: 8px;
-  min-width: 8px;
-  border-radius: 50%;
-  background: #4ade80;
-  box-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
-  margin-top: 5px;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.4; }
-}
-
-.currentlyTitle {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  color: rgba(255, 255, 255, 0.35);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-bottom: 0.3rem;
-}
-
-.currentlyText {
-  font-family: var(--font-body);
-  font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.8);
-  line-height: 1.5;
-}
-
+/* ─── Link row ────────────────────────────────────────────────────────────── */
 .linkRow {
   display: flex;
   align-items: center;
@@ -268,93 +279,42 @@
   border-color: rgba(255, 255, 255, 0.25);
 }
 
-.directContact {
-  margin-top: 1.25rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.contactEmail {
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
-  color: #667eea;
-  text-decoration: none;
-  transition: color 0.3s ease;
-  width: fit-content;
-}
-
-.contactEmail:hover {
-  color: #ffffff;
-}
-
-.contactPhones {
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.45);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  letter-spacing: 0.05em;
-}
-
-.phoneLink {
-  color: inherit;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.phoneLink:hover {
-  color: #ffffff;
-}
-
-.separator {
-  color: rgba(255, 255, 255, 0.1);
-}
-
-/* ─── Decorative 3D shape ─────────────────────────────────────── */
-.shapeCanvas {
-  position: absolute;
-  right: -6%;
-  bottom: 2%;
-  width: 700px;
-  height: 700px;
-  opacity: 0.28;
-  pointer-events: none;
-  z-index: 0;
-}
-
-@media (max-width: 1024px) {
-  .shapeCanvas { width: 480px; height: 480px; opacity: 0.22; right: -8%; }
-}
-
-@media (max-width: 768px) {
-  .shapeCanvas { display: none; }
-}
-
-/* ─── Responsive ──────────────────────────────────────────────── */
-@media (min-width: 768px) {
-  .layout {
-    grid-template-columns: 220px 1fr;
-    gap: 3.5rem;
-    align-items: start;
-  }
-  .imageWrapper { grid-column: 1; grid-row: 1; max-width: 220px; }
-  .body         { grid-column: 2; grid-row: 1; }
-  .sidebar      { grid-column: 1 / -1; grid-row: 2; }
-  .stats        { grid-template-columns: repeat(3, 1fr); }
+/* ─── Typographic lockup — desktop decorative ────────────────────────────── */
+.lockupWrap {
+  display: none;
 }
 
 @media (min-width: 1024px) {
-  .layout {
-    grid-template-columns: 240px 1fr 300px;
-    gap: 4rem 5rem;
-    align-items: start;
+  .lockupWrap {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    right: -1rem;
+    top: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: -1;
   }
-  .imageWrapper { grid-column: 1; grid-row: 1; max-width: 240px; }
-  .body         { grid-column: 2; grid-row: 1; }
-  .sidebar      { grid-column: 3; grid-row: 1; }
-  .stats        { grid-template-columns: 1fr; }
-  .stat         { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 1rem; }
-  .statValue    { font-size: 2.25rem; }
+}
+
+.lockup {
+  font-family: var(--font-display);
+  font-size: clamp(10rem, 18vw, 20rem);
+  font-weight: 900;
+  line-height: 0.85;
+  letter-spacing: -0.05em;
+  color: transparent;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.07) 0%,
+    rgba(255, 255, 255, 0.07) 45%,
+    transparent 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-mask-image: linear-gradient(180deg, black 50%, transparent 100%);
+  mask-image: linear-gradient(180deg, black 50%, transparent 100%);
+  pointer-events: none;
+  user-select: none;
+  will-change: transform;
 }

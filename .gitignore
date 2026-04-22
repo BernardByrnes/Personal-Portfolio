@@ -46,3 +46,7 @@ next-env.d.ts
 /CLAUDE.md
 guide.md
 github-profile-readme.md
+
+# Local notes / scratch markdown (keep README.md for the repo)
+*.md
+!README.md
