@@ -236,6 +236,18 @@ export function Laptop({ progress }: Props) {
     return () => tex.dispose();
   }, []);
 
+  // Reset typing animation when page is restored from bfcache
+  useEffect(() => {
+    const handlePageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) {
+        screenOnTimeRef.current = -1;
+        lastDrawRef.current = { chars: -1, cursor: false };
+      }
+    };
+    window.addEventListener("pageshow", handlePageShow);
+    return () => window.removeEventListener("pageshow", handlePageShow);
+  }, []);
+
   useFrame(({ clock }) => {
     const p = progress.current;
 
