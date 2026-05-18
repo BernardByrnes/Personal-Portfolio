@@ -208,7 +208,7 @@ export default function AboutSection() {
             <div ref={ruleRef} className={styles.rule} aria-hidden="true" />
 
             <p ref={line1Ref} className={styles.lead}>
-              Frontend Developer with 2+ years building production dashboards,
+              Frontend Developer with 3+ years building production dashboards,
               editorial platforms, and animated interfaces for clients across
               media, education, and logistics.
             </p>
