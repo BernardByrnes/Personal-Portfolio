@@ -15,7 +15,7 @@ export const projects: Project[] = [
       "Deployed to a live organisation at tasclms.com. Handles multi-role authentication, quiz engines, submission workflows, and manager-level reporting dashboards.",
     techStack: ["React", "TypeScript", "Django", "PostgreSQL", "TanStack Query", "REST APIs"],
     images: ["/projects/TASC_lms.png"],
-    liveUrl: "https://www.tasclms.com/",
+    liveUrl: "https://lms.staging.tasc.co.ug/",
     featured: true,
   },
   {
@@ -83,7 +83,7 @@ export const projects: Project[] = [
       "Proves ability to work with data-heavy UIs, custom charting beyond off-the-shelf defaults, and GSAP animation in a non-entertainment context.",
     techStack: ["React", "TypeScript", "D3.js", "React Charts", "GSAP"],
     images: ["/projects/muhooziBobi.png"],
-    liveUrl: "https://muhoozibobicharts2.netlify.app/",
+    liveUrl: "https://muhoozibobi3xx.netlify.app/",
     featured: false,
   },
 ];
