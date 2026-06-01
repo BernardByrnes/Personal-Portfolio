@@ -87,6 +87,7 @@ export function ContactShader() {
     const uTime = gl.getUniformLocation(prog, "u_time");
     const start = performance.now();
     let raf = 0;
+    let visible = false;
 
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio, 1.5);
@@ -97,26 +98,50 @@ export function ContactShader() {
     resize();
     window.addEventListener("resize", resize, { passive: true });
 
+    const draw = () => {
+      if (!visible || document.hidden) {
+        raf = 0;
+        return;
+      }
+
+      gl.uniform1f(uTime, (performance.now() - start) / 1000);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+      raf = requestAnimationFrame(draw);
+    };
+
+    const startLoop = () => {
+      if (!raf && visible && !document.hidden) {
+        raf = requestAnimationFrame(draw);
+      }
+    };
+
+    const stopLoop = () => {
+      if (!raf) return;
+      cancelAnimationFrame(raf);
+      raf = 0;
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) stopLoop();
+      else startLoop();
+    };
+
     // Only render when the canvas is actually in the viewport
-    let visible = false;
     const obs = new IntersectionObserver(
-      ([entry]) => { visible = entry.isIntersecting; },
+      ([entry]) => {
+        visible = entry.isIntersecting;
+        if (visible) startLoop();
+        else stopLoop();
+      },
       { threshold: 0.01 }
     );
     obs.observe(canvas);
-
-    const draw = () => {
-      if (visible && !document.hidden) {
-        gl.uniform1f(uTime, (performance.now() - start) / 1000);
-        gl.drawArrays(gl.TRIANGLES, 0, 3);
-      }
-      raf = requestAnimationFrame(draw);
-    };
-    raf = requestAnimationFrame(draw);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
-      cancelAnimationFrame(raf);
+      stopLoop();
       window.removeEventListener("resize", resize);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       obs.disconnect();
       gl.deleteProgram(prog);
       gl.deleteBuffer(buf);

@@ -6,70 +6,91 @@ import { PORTFOLIO } from "@/lib/constants";
 import styles from "./Preloader.module.css";
 
 interface PreloaderProps {
+  isReady: boolean;
   onComplete: () => void;
 }
 
-export default function Preloader({ onComplete }: PreloaderProps) {
+export default function Preloader({ isReady, onComplete }: PreloaderProps) {
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState("LOADING");
   const contentRef = useRef<HTMLDivElement>(null);
   const progressBarRef = useRef<HTMLDivElement>(null);
+  const counterRef = useRef({ value: 0 });
+  const completedRef = useRef(false);
+  const startTimeRef = useRef(0);
 
   useEffect(() => {
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const introDuration = reducedMotion ? 0.15 : 0.35;
+    const countDuration = reducedMotion ? 0.35 : 1.1;
     const tl = gsap.timeline();
+    startTimeRef.current = performance.now();
 
     tl.fromTo(
       contentRef.current,
       { opacity: 0 },
-      { opacity: 1, duration: 0.6, ease: "power2.out" }
+      { opacity: 1, duration: introDuration, ease: "power2.out" }
     );
 
-    const counter = { value: 0 };
-
     tl.to(
-      counter,
+      counterRef.current,
       {
-        value: 95,
-        duration: 2.4,
+        value: 92,
+        duration: countDuration,
         ease: "power1.inOut",
         onUpdate: () => {
-          setProgress(Math.floor(counter.value));
+          setProgress(Math.floor(counterRef.current.value));
         },
       },
-      0.6
+      introDuration
     );
 
+    return () => {
+      tl.kill();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isReady || completedRef.current) return;
+
+    completedRef.current = true;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const minimumVisibleMs = reducedMotion ? 550 : 1350;
+    const outroDuration = reducedMotion ? 0.2 : 0.45;
+    const elapsed = performance.now() - startTimeRef.current;
+    const delay = Math.max(0, minimumVisibleMs - elapsed) / 1000;
+    const tl = gsap.timeline({ delay });
+
     tl.to(
-      counter,
+      counterRef.current,
       {
         value: 100,
-        duration: 0.4,
+        duration: 0.25,
         ease: "power2.out",
         onUpdate: () => {
-          setProgress(Math.floor(counter.value));
+          setProgress(Math.floor(counterRef.current.value));
         },
         onComplete: () => {
           setStatus("READY");
         },
       },
-      3.0
     );
 
     tl.to(
       contentRef.current,
       {
         opacity: 0,
-        duration: 0.8,
+        duration: outroDuration,
         ease: "power2.inOut",
         onComplete: onComplete,
       },
-      3.4
+      "+=0.1"
     );
 
     return () => {
       tl.kill();
     };
-  }, [onComplete]);
+  }, [isReady, onComplete]);
 
   return (
     <div className={styles.preloader}>

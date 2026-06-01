@@ -1,9 +1,11 @@
 "use client";
 
-import { useRef } from "react";
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ArrowUpRight } from "lucide-react";
 import { Project } from "@/types";
+import { hasFinePointer, shouldUseLightEffects } from "@/lib/performance";
 import styles from "./ProjectsSection.module.css";
 
 interface ProjectCardProps {
@@ -16,8 +18,27 @@ export default function ProjectCard({ project, onClick, featured }: ProjectCardP
   const cardRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const techRef = useRef<HTMLDivElement>(null);
+  const rotateXTo = useRef<((value: number) => void) | null>(null);
+  const rotateYTo = useRef<((value: number) => void) | null>(null);
+  const [tiltEnabled, setTiltEnabled] = useState(false);
+
+  useEffect(() => {
+    setTiltEnabled(hasFinePointer() && !shouldUseLightEffects());
+
+    if (!cardRef.current) return;
+    rotateXTo.current = gsap.quickTo(cardRef.current, "rotateX", {
+      duration: 0.45,
+      ease: "power2.out",
+    });
+    rotateYTo.current = gsap.quickTo(cardRef.current, "rotateY", {
+      duration: 0.45,
+      ease: "power2.out",
+    });
+    gsap.set(cardRef.current, { transformPerspective: 1000 });
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent) => {
+    if (!tiltEnabled) return;
     const card = cardRef.current;
     if (!card) return;
     const rect = card.getBoundingClientRect();
@@ -25,13 +46,8 @@ export default function ProjectCard({ project, onClick, featured }: ProjectCardP
     const y = e.clientY - rect.top;
     const rotateX = ((y - rect.height / 2) / rect.height) * 10;
     const rotateY = ((rect.width / 2 - x) / rect.width) * 10;
-    gsap.to(card, {
-      rotateX,
-      rotateY,
-      duration: 0.5,
-      ease: "power2.out",
-      transformPerspective: 1000,
-    });
+    rotateXTo.current?.(rotateX);
+    rotateYTo.current?.(rotateY);
   };
 
   const handleMouseEnter = () => {
@@ -48,7 +64,8 @@ export default function ProjectCard({ project, onClick, featured }: ProjectCardP
   };
 
   const handleMouseLeave = () => {
-    gsap.to(cardRef.current, { rotateX: 0, rotateY: 0, duration: 0.5, ease: "power2.out" });
+    rotateXTo.current?.(0);
+    rotateYTo.current?.(0);
     gsap.to(overlayRef.current, { opacity: 0, duration: 0.3, ease: "power2.in" });
   };
 
@@ -67,10 +84,13 @@ export default function ProjectCard({ project, onClick, featured }: ProjectCardP
       {/* Background image area */}
       <div className={styles.cardImage}>
         {project.images && project.images.length > 0 ? (
-          <img 
-            src={project.images[0]} 
-            alt={project.title} 
-            style={{ width: "100%", height: "100%", objectFit: "cover" }} 
+          <Image
+            src={project.images[0]}
+            alt={project.title}
+            fill
+            sizes={featured ? "(min-width: 1024px) 66vw, 100vw" : "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"}
+            quality={72}
+            style={{ objectFit: "cover" }}
           />
         ) : (
           <div className={styles.cardImagePlaceholder}>

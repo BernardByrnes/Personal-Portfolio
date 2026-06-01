@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -8,6 +8,7 @@ import {
   SiReact, SiNextdotjs, SiTypescript, SiTailwindcss,
   SiGreensock, SiNodedotjs, SiD3, SiFigma,
 } from "react-icons/si";
+import { shouldUseLightEffects } from "@/lib/performance";
 import styles from "./AboutSection.module.css";
 import SimpleProfileCard from "./SimpleProfileCard";
 
@@ -49,6 +50,11 @@ export default function AboutSection() {
   const blob1WrapRef = useRef<HTMLDivElement>(null);
   const blob2WrapRef = useRef<HTMLDivElement>(null);
   const photoWrapRef = useRef<HTMLDivElement>(null);
+  const [lightEffects, setLightEffects] = useState(true);
+
+  useEffect(() => {
+    setLightEffects(shouldUseLightEffects());
+  }, []);
 
   // Reveal animation — fires once on enter
   useEffect(() => {
@@ -161,16 +167,18 @@ export default function AboutSection() {
     <section id="about" ref={sectionRef} className={styles.section}>
 
       {/* Fluid cursor effect scoped to this section */}
-      <SplashCursor
-        SIM_RESOLUTION={64}
-        DYE_RESOLUTION={512}
-        DENSITY_DISSIPATION={3.5}
-        VELOCITY_DISSIPATION={2}
-        CURL={3}
-        SPLAT_RADIUS={0.18}
-        RAINBOW_MODE={true}
-        TRANSPARENT={true}
-      />
+      {!lightEffects && (
+        <SplashCursor
+          SIM_RESOLUTION={64}
+          DYE_RESOLUTION={384}
+          DENSITY_DISSIPATION={3.5}
+          VELOCITY_DISSIPATION={2}
+          CURL={3}
+          SPLAT_RADIUS={0.18}
+          RAINBOW_MODE={true}
+          TRANSPARENT={true}
+        />
+      )}
 
       {/* Ambient blobs — CSS drift, outer wrap gets GSAP mouse offset */}
       <div ref={blob1WrapRef} className={styles.blobWrap1} aria-hidden="true">

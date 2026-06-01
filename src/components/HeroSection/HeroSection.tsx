@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -20,10 +20,15 @@ const MobileOrbit = dynamic(
   { ssr: false, loading: () => <div className={styles.mobileOrbitPlaceholder} /> }
 );
 
-export default function HeroSection() {
+type HeroSectionProps = {
+  onReady?: () => void;
+};
+
+export default function HeroSection({ onReady }: HeroSectionProps) {
   const sectionRef   = useRef<HTMLElement>(null);
   const overlayRef   = useRef<HTMLDivElement>(null);
   const scrollCueRef = useRef<HTMLDivElement>(null);
+  const readySentRef = useRef(false);
 
   // Mobile overlay ref (name + role)
   const mobileOverlayRef = useRef<HTMLDivElement>(null);
@@ -34,6 +39,12 @@ export default function HeroSection() {
 
   const [mounted,  setMounted]  = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+
+  const markReady = useCallback(() => {
+    if (readySentRef.current) return;
+    readySentRef.current = true;
+    onReady?.();
+  }, [onReady]);
 
   // Hydration-safe detection
   useEffect(() => {
@@ -136,7 +147,7 @@ export default function HeroSection() {
 
         {/* Interactive orbit fills the viewport */}
         <div className={styles.mobileOrbitWrap}>
-          <MobileOrbit />
+          <MobileOrbit onReady={markReady} />
         </div>
 
         {/* Name + title overlay — fades in on mount */}
@@ -166,7 +177,7 @@ export default function HeroSection() {
 
         {/* Three.js full-bleed canvas */}
         <div className={styles.canvasWrap}>
-          <LaptopScene progress={progress} mouse={mouse} />
+          <LaptopScene progress={progress} mouse={mouse} onReady={markReady} />
         </div>
 
         {/* Name / title overlay — fades in when screen text is visible */}

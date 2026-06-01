@@ -55,6 +55,7 @@ function Particles() {
 type SceneProps = {
   progress: React.MutableRefObject<number>;
   mouse:    React.MutableRefObject<{ x: number; y: number }>;
+  onReady?: () => void;
 };
 
 function invLerp(min: number, max: number, v: number) {
@@ -115,9 +116,22 @@ function CameraRig({ progress, mouse }: SceneProps) {
   return null;
 }
 
-function Scene({ progress, mouse }: SceneProps) {
+function ReadySignal({ onReady }: { onReady?: () => void }) {
+  const sentRef = useRef(false);
+
+  useFrame(() => {
+    if (sentRef.current) return;
+    sentRef.current = true;
+    requestAnimationFrame(() => onReady?.());
+  });
+
+  return null;
+}
+
+function Scene({ progress, mouse, onReady }: SceneProps) {
   return (
     <>
+      <ReadySignal onReady={onReady} />
       <CameraRig progress={progress} mouse={mouse} />
 
       {/* Lighting */}
@@ -145,7 +159,7 @@ function Scene({ progress, mouse }: SceneProps) {
 
 export type { SceneProps };
 
-export function LaptopScene({ progress, mouse }: SceneProps) {
+export function LaptopScene({ progress, mouse, onReady }: SceneProps) {
   return (
     <Canvas
       dpr={[1, 1.2]}
@@ -153,7 +167,7 @@ export function LaptopScene({ progress, mouse }: SceneProps) {
       camera={{ position: [0, 1.2, -5.5], fov: 42, near: 0.1, far: 60 }}
       style={{ background: "#0e0e14" }}
     >
-      <Scene progress={progress} mouse={mouse} />
+      <Scene progress={progress} mouse={mouse} onReady={onReady} />
     </Canvas>
   );
 }

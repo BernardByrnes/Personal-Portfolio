@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { ReactNode } from "react";
 import dynamic from "next/dynamic";
 import Lenis from "lenis";
 import { gsap } from "gsap";
@@ -11,32 +12,77 @@ import HeroSection from "@/components/HeroSection";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import SectionSkeleton from "@/components/ui/SectionSkeleton";
 import { CustomCursor, ScrollProgress } from "@/components/ui";
+import { shouldUseLightEffects } from "@/lib/performance";
 
 const AboutSection    = dynamic(() => import("@/components/AboutSection"),    { loading: () => <SectionSkeleton /> });
 const ProjectsSection = dynamic(() => import("@/components/ProjectsSection"), { loading: () => <SectionSkeleton /> });
 const SkillsSection   = dynamic(() => import("@/components/SkillsSection"),   { loading: () => <SectionSkeleton /> });
 const ContactSection  = dynamic(() => import("@/components/ContactSection"),  { loading: () => <SectionSkeleton /> });
 
+function DeferredSection({ children }: { children: ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    if (ready) return;
+
+    const node = ref.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        setReady(true);
+        observer.disconnect();
+      },
+      { rootMargin: "900px 0px" }
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [ready]);
+
+  return (
+    <div ref={ref}>
+      {ready ? children : <SectionSkeleton />}
+    </div>
+  );
+}
+
 export default function Home() {
-  const [loadingState, setLoadingState] = useState<boolean | null>(null);
+  const [loadingState, setLoadingState] = useState(true);
+  const [heroReady, setHeroReady] = useState(false);
 
   useEffect(() => {
     if ("scrollRestoration" in history) {
       history.scrollRestoration = "manual";
     }
     window.scrollTo(0, 0);
-    setLoadingState(true);
+  }, []);
+
+  useEffect(() => {
+    const fallback = window.setTimeout(() => {
+      setHeroReady(true);
+    }, 5000);
+
+    return () => window.clearTimeout(fallback);
   }, []);
 
   useEffect(() => {
     if (loadingState !== false) return;
 
     gsap.registerPlugin(ScrollTrigger);
+    const lightEffects = shouldUseLightEffects();
 
     // Respect prefers-reduced-motion
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       gsap.globalTimeline.clear();
       ScrollTrigger.getAll().forEach((st) => st.kill());
+      return;
+    }
+
+    if (lightEffects) {
+      requestAnimationFrame(() => ScrollTrigger.refresh());
       return;
     }
 
@@ -86,31 +132,45 @@ export default function Home() {
     };
   }, [loadingState]);
 
-  const handlePreloaderComplete = () => {
+  const handlePreloaderComplete = useCallback(() => {
     setLoadingState(false);
-  };
+  }, []);
+
+  const handleHeroReady = useCallback(() => {
+    setHeroReady(true);
+  }, []);
 
   return (
     <>
-      {loadingState && <Preloader onComplete={handlePreloaderComplete} />}
+      {loadingState && (
+        <Preloader isReady={heroReady} onComplete={handlePreloaderComplete} />
+      )}
       <CustomCursor />
       <ScrollProgress />
       <Navigation />
       <main>
         <ErrorBoundary>
-          <HeroSection />
+          <HeroSection onReady={handleHeroReady} />
         </ErrorBoundary>
         <ErrorBoundary>
-          <AboutSection />
+          <DeferredSection>
+            <AboutSection />
+          </DeferredSection>
         </ErrorBoundary>
         <ErrorBoundary>
-          <ProjectsSection />
+          <DeferredSection>
+            <ProjectsSection />
+          </DeferredSection>
         </ErrorBoundary>
         <ErrorBoundary>
-          <SkillsSection />
+          <DeferredSection>
+            <SkillsSection />
+          </DeferredSection>
         </ErrorBoundary>
         <ErrorBoundary>
-          <ContactSection />
+          <DeferredSection>
+            <ContactSection />
+          </DeferredSection>
         </ErrorBoundary>
       </main>
     </>

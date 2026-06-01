@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { X, ExternalLink, Code2 } from "lucide-react";
@@ -86,10 +87,13 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
         {/* Hero area */}
         <div className={styles.heroArea}>
           {project.images && project.images.length > 0 ? (
-            <img 
-              src={project.images[0]} 
-              alt={project.title} 
-              style={{ width: "100%", height: "100%", objectFit: "cover", position: "absolute", inset: 0 }} 
+            <Image
+              src={project.images[0]}
+              alt={project.title}
+              fill
+              sizes="(min-width: 900px) 900px, 100vw"
+              quality={78}
+              style={{ objectFit: "cover" }}
             />
           ) : (
             <div className={styles.heroPlaceholder}>

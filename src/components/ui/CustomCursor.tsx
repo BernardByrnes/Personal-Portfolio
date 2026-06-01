@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
+import { hasFinePointer, shouldUseLightEffects } from "@/lib/performance";
 import styles from "./CustomCursor.module.css";
 
 export default function CustomCursor() {
@@ -11,7 +12,7 @@ export default function CustomCursor() {
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+      setIsMobile(window.innerWidth < 768 || !hasFinePointer() || shouldUseLightEffects());
     };
     checkMobile();
     window.addEventListener("resize", checkMobile);
@@ -26,19 +27,16 @@ export default function CustomCursor() {
 
     if (!cursor || !follower) return;
 
+    const cursorX = gsap.quickTo(cursor, "x", { duration: 0.1, ease: "power2.out" });
+    const cursorY = gsap.quickTo(cursor, "y", { duration: 0.1, ease: "power2.out" });
+    const followerX = gsap.quickTo(follower, "x", { duration: 0.28, ease: "power2.out" });
+    const followerY = gsap.quickTo(follower, "y", { duration: 0.28, ease: "power2.out" });
+
     const moveCursor = (e: MouseEvent) => {
-      gsap.to(cursor, {
-        x: e.clientX,
-        y: e.clientY,
-        duration: 0.1,
-        ease: "power2.out",
-      });
-      gsap.to(follower, {
-        x: e.clientX,
-        y: e.clientY,
-        duration: 0.3,
-        ease: "power2.out",
-      });
+      cursorX(e.clientX);
+      cursorY(e.clientY);
+      followerX(e.clientX);
+      followerY(e.clientY);
     };
 
     const handleMouseEnter = () => {

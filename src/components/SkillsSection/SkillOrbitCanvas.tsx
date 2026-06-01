@@ -101,10 +101,12 @@ function Orbit({ drag, nodeEls, isVisible }: OrbitProps) {
 
 export type SkillOrbitCanvasProps = {
   onHover?: (name: string | null) => void;
+  onReady?: () => void;
 };
 
-export function SkillOrbitCanvas({ onHover = () => {} }: SkillOrbitCanvasProps) {
+export function SkillOrbitCanvas({ onHover = () => {}, onReady }: SkillOrbitCanvasProps) {
   const [grabbing, setGrabbing] = useState(false);
+  const [visible, setVisible] = useState(false);
   const isVisible = useRef(false);
   const wrapRef = useRef<HTMLDivElement>(null);
   const nodeEls = useRef<(HTMLDivElement | null)[]>([]);
@@ -121,12 +123,20 @@ export function SkillOrbitCanvas({ onHover = () => {} }: SkillOrbitCanvasProps) 
     const el = wrapRef.current;
     if (!el) return;
     const obs = new IntersectionObserver(
-      ([entry]) => { isVisible.current = entry.isIntersecting; },
+      ([entry]) => {
+        isVisible.current = entry.isIntersecting;
+        setVisible(entry.isIntersecting);
+      },
       { rootMargin: "400px 0px", threshold: 0 }
     );
     obs.observe(el);
     return () => obs.disconnect();
   }, []);
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => onReady?.());
+    return () => cancelAnimationFrame(frame);
+  }, [onReady]);
 
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     drag.current.active = true;
@@ -188,7 +198,7 @@ export function SkillOrbitCanvas({ onHover = () => {} }: SkillOrbitCanvasProps) 
       onPointerLeave={onPointerUp}
     >
       <Canvas
-        frameloop="always"
+        frameloop={visible ? "always" : "demand"}
         dpr={[1, 1.2]}
         gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
         camera={{ position: [0, 0.4, 7.5], fov: 50 }}
